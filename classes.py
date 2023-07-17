@@ -17,9 +17,12 @@ class Fish(pygame.sprite.Sprite):
     def __init__(self) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((50, 40))
-        self.rarity = weighted_choice(
-            Fish.RARITY_DICT.keys(), p=[0.35, 0.25, 0.20, 0.15, 0.05]
+
+        rarity_choice = weighted_choice(
+            list(range(0, 6)), p=[0.30, 0.25, 0.20, 0.15, 0.075, 0.025]
         )
+
+        self.rarity = list(Fish.RARITY_DICT.keys())[rarity_choice]
 
 
 class Player(pygame.sprite.Sprite):
