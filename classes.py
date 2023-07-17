@@ -3,7 +3,7 @@ from numpy.random import choice as weighted_choice
 
 
 class Fish(pygame.sprite.Sprite):
-    RARITY_DICT = {
+    RARITY_DICT = { # Dictionary to assign rarity of fish to price
         "Common": 5,
         "Uncommon": 10,
         "Rare": 30,
@@ -16,11 +16,11 @@ class Fish(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((20, 20))
 
-        rarity_choice = weighted_choice(
-            list(range(0, 6)), p=[0.30, 0.25, 0.20, 0.15, 0.075, 0.025]
+        rarity_choice = weighted_choice( # numpy.random.choice can be used to map a probability array (p) to a value in range(0, 6)...
+            list(range(0, 6)), p=[0.30, 0.25, 0.20, 0.15, 0.075, 0.025] # ...this is used to index the RARITY_DICT to assign the self.rarity attribute
         )
 
-        self.rarity = list(Fish.RARITY_DICT.keys())[rarity_choice]
+        self.rarity = list(Fish.RARITY_DICT.keys())[rarity_choice] # 
 
         fishesList = ["Cod", "Bass", "Trout", "Salmon", "Tuna"]
 
