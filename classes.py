@@ -16,34 +16,36 @@ class Fish(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((20, 20))
 
-        rarity_choice = weighted_choice(  # numpy.random.choice can be used to map a probability array (p) to a value in range(0, 6)...
+        rarity_choice = weighted_choice(  # numpy.random.choice can be used to map a probability array (p) to a value in range(0, 6) corresponding to the RARITY_DICT
             list(range(0, 6)),
-            p=[
-                0.30,
-                0.25,
-                0.20,
-                0.15,
-                0.075,
-                0.025,
-            ],  # ...this is used to index the RARITY_DICT to assign the self.rarity attribute
+            p=[  # Rarity Probabilities (Adds up to 1)
+                0.30,  # Common
+                0.25,  # Uncommon
+                0.20,  # Rare
+                0.15,  # Very Rare
+                0.075,  # Exotic
+                0.025,  # Black Market
+            ],
         )
 
-        self.rarity = list(Fish.RARITY_DICT.keys())[rarity_choice]  #
+        self.rarity = list(Fish.RARITY_DICT.keys())[
+            rarity_choice
+        ]  # Set rarity attribute based on rarity choice above
 
         fishesList = ["Cod", "Bass", "Trout", "Salmon", "Tuna"]
 
 
 class Player(pygame.sprite.Sprite):
-    PLAYER_SIZE = (128, 32)
+    PLAYER_SIZE = (128, 128)
 
     PLAYER_IMAGE = pygame.transform.scale(
-        pygame.image.load("images/entites/direction_test.png"), PLAYER_SIZE
+        pygame.image.load("images/entities/player.png"), PLAYER_SIZE
     )
 
-    def __init__(self) -> None:
+    def __init__(self, position_x, position_y) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.inventory = []
-        self.position = (640, 360)
+        self.position = (position_x, position_y)
         self.direction = 0
 
         self.rect = pygame.Rect(*self.position, *Player.PLAYER_SIZE)
@@ -60,10 +62,10 @@ class Player(pygame.sprite.Sprite):
 
 
 class Meter(pygame.sprite.Sprite):
-    def __init__(self, position) -> None:
+    def __init__(self, position_x, position_y) -> None:
         pygame.sprite.Sprite.__init__(self)
 
-        self.position = position
+        self.position = (position_x, position_y)
         self.rect = pygame.Rect(*self.position, 410, 71)
         self.image = pygame.transform.scale(
             pygame.image.load("images/meter/meter.png"),
