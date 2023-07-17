@@ -25,8 +25,8 @@ def main():
 			if event.type == pygame.QUIT:
 				# change the value to False, to exit the main loop
 				running = False
-# Set up starting variables
-	mainRod = "Fishing Rod (Level 1)"
+	# Set up starting variables
+	mainRod = "Fish Stick"
 	mainPowerUp = ""
 	totalPoints = 0
 	usableItems = []
@@ -36,8 +36,8 @@ def main():
 
 	# Set up a list/dictioanry for the fishes, fishing rods, and power ups (Point values may change).
 	fishesList = ["Cod", "Bass", "Trout", "Salmon", "Tuna"]
-	fishingRodDic = {"Fishing Rod (Level 2)" : 50, "Fishing Rod (Level 3)" : 150, "Fishing Rod (Level 4)" : 400, "Fishing Rod (Level 5)" : 1000}
-	powerUpsDic = {"Slow-Down Bar (10 Casts)" : 50, "Increase Luck (10 Casts)" : 80, "Double Points (10 Casts)" : 100}
+	fishingRodDic = {"Captain Hooker" : 50, "The Salmon Slayer" : 150, "The Trout Terminator" : 400, "The Aquatic Abductor" : 1000}
+	powerUpsDic = {"Slow-Time" : 50, "1 in a Million" : 80, "Double Down" : 100}
 
 	# Set up a list of all the fishing rod and power up options
 	var1 = fishingRodDic.keys()
@@ -51,6 +51,8 @@ def main():
 	for i in var2:
 		powerUps.append(i)
 
+	welcome_message()
+
 	# Use a while loop to check if the user wants to throw the fishing line
 	while (input("Throwing Fishing Line: ") == "y"):
 
@@ -58,8 +60,6 @@ def main():
 		if (powerUpCounter > 0):
 			powerUpCounter -= 1
 			print("You have " + str(powerUpCounter) + " uses for your power up left.")
-		else:
-			print("You have no active power up.")
 
 		# Get a random number between 0 and 4 (This will be changed so it is weighted by rarity)
 		fishType = fishesList[random.randint(0,4)]
@@ -90,7 +90,18 @@ def main():
 		print ("Main Rod: " + mainRod)
 		print("Main Power Up: " + mainPowerUp)
 		print("Total Points: " + str(totalPoints))
+
 		print()
+
+def welcome_message():
+	print("Welcome to FISHING EMPIRE!")
+	print("\n")
+	print("Fishing Empire is a game all about FISH! The aim of the game is to\n\ncatch the rarest and most valuable fish that you can, and then using\n\nthem to buy upgrades. It won’t be easy though: each cast of your rod is\n\nfollowed by a tricky reaction-based challenge in order to secure\n\nthe fish.")
+	print("\n")
+	print("You will start with a level 1 fishing rod called Fish Stick, but, as\n\nyou progress, the shop will offer better rods and some cool power-ups! ")
+	print("\n")
+	print("Good Luck!")
+	print("\n")
 
 # Define a function which shows the user the fishing shop
 def show_shop(fishingRods, powerUps):
@@ -134,6 +145,7 @@ def get_items(totalPoints, fishingRods, powerUps, usableItems, fishingRodDic, po
 			if (totalPoints >= cost):
 				totalPoints -= cost
 				usableItems.append(userItem)
+				print("You have bought " + userItem)
 
 			else:
 				# Tell the user they don't have enough points
@@ -199,8 +211,13 @@ def show_inventory(fishingRods, powerUps, totalPoints, mainRod, usableItems, mai
 
 		for i in range (1, len(usableItems) + 1):
 			print(str(i) + ". " + usableItems[i-1])
+		usableItems, mainRod, mainPowerUp, powerUpCounter = use_item(fishingRods, powerUps, totalPoints, mainRod, usableItems, mainPowerUp, powerUpCounter)
 	else:
 		print("You have no fishing rods or power ups to use.\n")
+
+	return usableItems, mainRod, mainPowerUp, powerUpCounter
+
+def use_item(fishingRods, powerUps, totalPoints, mainRod, usableItems, mainPowerUp, powerUpCounter):
 
 	# Ask if they would like to use a fishing rod or neither
 	userInput = input("Would you like to use a fishing rod or power up? (Enter fishing rod, power up, or no) ")
@@ -211,13 +228,11 @@ def show_inventory(fishingRods, powerUps, totalPoints, mainRod, usableItems, mai
 		userRod = input("What rod would you like to use? ")
 
 		# Check if the user owns the rod and set it to their main rod if True
-		# Delete the item from usableItems
 		if (userRod in usableItems):
 			mainRod = userRod
-			del usableItems[usableItems.index(userRod)]
 			print(userRod + " is your main rod now.")
 		else:
-			print("You can not use that rod right now.")
+			print("You can not use that rod.")
 
 	elif (userInput == "power up"):
 		# Ask the user what power up they want to use
