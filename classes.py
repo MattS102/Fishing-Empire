@@ -3,7 +3,7 @@ from numpy.random import choice as weighted_choice
 
 
 class Fish(pygame.sprite.Sprite):
-    RARITY_DICT = { # Dictionary to assign rarity of fish to price
+    RARITY_DICT = {  # Dictionary to assign rarity of fish to price
         "Common": 5,
         "Uncommon": 10,
         "Rare": 30,
@@ -16,11 +16,19 @@ class Fish(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((20, 20))
 
-        rarity_choice = weighted_choice( # numpy.random.choice can be used to map a probability array (p) to a value in range(0, 6)...
-            list(range(0, 6)), p=[0.30, 0.25, 0.20, 0.15, 0.075, 0.025] # ...this is used to index the RARITY_DICT to assign the self.rarity attribute
+        rarity_choice = weighted_choice(  # numpy.random.choice can be used to map a probability array (p) to a value in range(0, 6)...
+            list(range(0, 6)),
+            p=[
+                0.30,
+                0.25,
+                0.20,
+                0.15,
+                0.075,
+                0.025,
+            ],  # ...this is used to index the RARITY_DICT to assign the self.rarity attribute
         )
 
-        self.rarity = list(Fish.RARITY_DICT.keys())[rarity_choice] # 
+        self.rarity = list(Fish.RARITY_DICT.keys())[rarity_choice]  #
 
         fishesList = ["Cod", "Bass", "Trout", "Salmon", "Tuna"]
 
@@ -56,8 +64,10 @@ class Meter(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.position = position
-        self.image = pygame.image.load("images/meter.png")
-        self.rect = pygame.Rect(*self.position, 580, 71)
+        self.rect = pygame.Rect(*self.position, 410, 71)
+        self.image = pygame.transform.scale(
+            pygame.image.load("images/meter.png"), (self.rect.width, self.rect.height)
+        )
         self.bar = self.Bar(self)
 
     def update(self):
@@ -66,20 +76,25 @@ class Meter(pygame.sprite.Sprite):
     class Bar(pygame.sprite.Sprite):
         def __init__(self, parent) -> None:
             pygame.sprite.Sprite.__init__(self)
-
+            self.parent = parent
             self.position = parent.position
-            self.image = pygame.image.load("images/bar.png")
             self.rect = pygame.Rect(*self.position, 3, 71)
+            self.image = pygame.transform.scale(
+                pygame.image.load("images/bar.png"), (self.rect.width, self.rect.height)
+            )
             self.is_increasing = True
 
         def move(self):
             change = 20 if self.is_increasing else -20
 
-            if 775 - change < self.rect.x < 775 + change and self.is_increasing:
-                self.is_increasing = False
-
-            elif 45 - change > self.rect.x > 45 + change and not self.is_increasing:
+            if self.parent.rect.x - self.rect.x > -60 and not self.is_increasing:
                 self.is_increasing = True
+
+            elif (
+                self.parent.rect.x + self.parent.rect.width - self.rect.x < 60
+                and self.is_increasing
+            ):
+                self.is_increasing = False
 
             self.position = (self.position[0] + change, self.position[1])
             self.rect.x += change
