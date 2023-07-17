@@ -1,5 +1,6 @@
 # Import Random (for testing)
 import random
+import pygame
 	
 # Define Main function
 def main():
