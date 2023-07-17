@@ -4,7 +4,6 @@ import pygame
 	
 # Define Main function
 def main():
-<<<<<<< Updated upstream
 	# initialize the pygame module
 	pygame.init()
 	# load and set the logo
@@ -26,13 +25,10 @@ def main():
 			if event.type == pygame.QUIT:
 				# change the value to False, to exit the main loop
 				running = False
-# Set up starting variables
+	# Set up starting variables
 	mainRod = "Fishing Rod (Level 1)"
-=======
-
 	# Set up starting variables
 	mainRod = "Fish Stick"
->>>>>>> Stashed changes
 	mainPowerUp = ""
 	totalPoints = 0
 	usableItems = []
