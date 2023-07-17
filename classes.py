@@ -47,3 +47,37 @@ class Player(pygame.sprite.Sprite):
     def rotate(self, angle):
         self.image = pygame.transform.rotate(Player.PLAYER_IMAGE, angle)
         self.rect = self.image.get_rect(center=self.rect.center)
+
+
+class Meter(pygame.sprite.Sprite):
+    def __init__(self, position) -> None:
+        pygame.sprite.Sprite.__init__(self)
+
+        self.position = position
+        self.image = pygame.image.load("images/meter.png")
+        self.rect = pygame.Rect(*self.position, 580, 71)
+        self.bar = self.Bar(self)
+
+    def update(self):
+        self.bar.move()
+
+    class Bar(pygame.sprite.Sprite):
+        def __init__(self, parent) -> None:
+            pygame.sprite.Sprite.__init__(self)
+
+            self.position = parent.position
+            self.image = pygame.image.load("images/bar.png")
+            self.rect = pygame.Rect(*self.position, 3, 71)
+            self.is_increasing = True
+
+        def move(self):
+            change = 20 if self.is_increasing else -20
+
+            if 775 - change < self.rect.x < 775 + change and self.is_increasing:
+                self.is_increasing = False
+
+            elif 45 - change > self.rect.x > 45 + change and not self.is_increasing:
+                self.is_increasing = True
+
+            self.position = (self.position[0] + change, self.position[1])
+            self.rect.x += change

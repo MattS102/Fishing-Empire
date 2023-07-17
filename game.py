@@ -1,8 +1,8 @@
 import pygame
-from classes import Player, Fish
+from classes import Player, Fish, Meter
 
 WIDTH, HEIGHT = 1280, 720
-FPS = 30
+FPS = 60
 
 WHITE = (255, 255, 255)
 
@@ -14,6 +14,9 @@ clock = pygame.time.Clock()
 
 sprites = pygame.sprite.Group()
 player = Player()
+meter = Meter((0, 0))
+sprites.add(meter)
+sprites.add(meter.bar)
 sprites.add(player)
 
 running = True
