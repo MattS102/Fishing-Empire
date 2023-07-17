@@ -22,6 +22,8 @@ class Fish(pygame.sprite.Sprite):
 
         self.rarity = list(Fish.RARITY_DICT.keys())[rarity_choice]
 
+        fishesList = ["Cod", "Bass", "Trout", "Salmon", "Tuna"]
+
 
 class Player(pygame.sprite.Sprite):
     PLAYER_SIZE = (128, 32)
