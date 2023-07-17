@@ -12,8 +12,6 @@ class Fish(pygame.sprite.Sprite):
         "Black Market": 200,
     }
 
-    # Rocket Leauge-type rarity tiers as keys and prices as values
-
     def __init__(self) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((20, 20))
