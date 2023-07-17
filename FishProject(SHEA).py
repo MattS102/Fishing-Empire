@@ -26,8 +26,6 @@ def main():
 				# change the value to False, to exit the main loop
 				running = False
 	# Set up starting variables
-	mainRod = "Fishing Rod (Level 1)"
-	# Set up starting variables
 	mainRod = "Fish Stick"
 	mainPowerUp = ""
 	totalPoints = 0
