@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
     PLAYER_SIZE = (128, 32)
 
     PLAYER_IMAGE = pygame.transform.scale(
-        pygame.image.load("images/direction_test.png"), PLAYER_SIZE
+        pygame.image.load("images/entites/direction_test.png"), PLAYER_SIZE
     )
 
     def __init__(self) -> None:
@@ -66,7 +66,8 @@ class Meter(pygame.sprite.Sprite):
         self.position = position
         self.rect = pygame.Rect(*self.position, 410, 71)
         self.image = pygame.transform.scale(
-            pygame.image.load("images/meter.png"), (self.rect.width, self.rect.height)
+            pygame.image.load("images/meter/meter.png"),
+            (self.rect.width, self.rect.height),
         )
         self.bar = self.Bar(self)
 
@@ -80,7 +81,8 @@ class Meter(pygame.sprite.Sprite):
             self.position = parent.position
             self.rect = pygame.Rect(*self.position, 3, 71)
             self.image = pygame.transform.scale(
-                pygame.image.load("images/bar.png"), (self.rect.width, self.rect.height)
+                pygame.image.load("images/meter/bar.png"),
+                (self.rect.width, self.rect.height),
             )
             self.is_increasing = True
 
