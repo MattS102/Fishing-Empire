@@ -155,7 +155,7 @@ def get_items(totalPoints, fishingRods, powerUps, usableItems, fishingRodDic, po
 def get_points(fishType, totalPoints):
 
 	# Create a dictionary which contains each type of fish and their point value
-	fishDic = {"Cod" : 100, "Bass" : 300, "Trout" : 800, "Salmon" : 1500, "Tuna" : 3000}
+	fishDic = {"Cod" : 100, "Bass" : 300, "Trout" : 800, "Salmon" : 1500, "Tuna" : 3000, "DHpupfish" : 100000}
 
 	# Add the fish's point value to the user's total points
 	totalPoints += fishDic[fishType]
