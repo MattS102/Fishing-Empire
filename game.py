@@ -14,10 +14,9 @@ clock = pygame.time.Clock()
 
 sprites = pygame.sprite.Group()
 player = Player()
-meter = Meter((0, 0))
+meter = Meter((20, 100))
 sprites.add(meter)
 sprites.add(meter.bar)
-sprites.add(player)
 
 running = True
 while running:
