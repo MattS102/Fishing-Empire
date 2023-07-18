@@ -1,9 +1,15 @@
 # Import Random (for testing)
 import random
 import pygame
-	
+import os
+
+#src path
+ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img'
 # Define Main function
 def main():
+	#load images
+	cod = pygame.image.load(os.path.join(ImgPath,'cod.png'))
+	
 	# initialize the pygame module
 	pygame.init()
 	# load and set the logo
