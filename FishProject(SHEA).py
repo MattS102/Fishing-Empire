@@ -142,24 +142,8 @@ def welcome_message():
     drawtext('Welcome to FISHING EMPIRE!', 56 ,dblue, X // 2, (Y // 2) - 256)
     drawtext('Fishing Empire is a game all about FISH!', 10, dblue, X // 2, (Y // 2) - 128)
     drawtext('The aim of the game is to catch the rarest and most valuable fish that you can and use them to buy upgrades', 10 ,dblue, X // 2, (Y // 2) - 100)
-    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,X // 2, (Y // 2) - 100)
-    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,X // 2, (Y // 2) - 100)
-
-    descrip4 = font.render("as you progress, the shop will offer better rods and some cool power-ups!  Good Luck!",
-                           True, dblue)
-    descRect = descrip.get_rect()
-    descRect2 = descrip2.get_rect()
-    descRect3 = descrip3.get_rect()
-    descRect4 = descrip4.get_rect()
-
-    descRect.center = (X // 2, (Y // 2) - 128)
-    descRect2.center = (X // 2, (Y // 2) - 100)
-    descRect3.center = (X // 2, (Y // 2) - 72)
-    descRect4.center = (X // 2, (Y // 2) - 44)
-    window.blit(descrip, descRect)
-    window.blit(descrip2, descRect2)
-    window.blit(descrip3, descRect3)
-    window.blit(descrip4, descRect4)
+    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,X // 2, (Y // 2) - 76)
+    drawtext('as you progress, the shop will offer better rods and some cool power-ups!  Good Luck!', 10 ,dblue,X // 2, (Y // 2) - 44)
     pygame.display.update()
 
 
