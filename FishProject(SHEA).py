@@ -7,9 +7,31 @@ import os
 ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img'
 # Define Main function
 def main():
-	#load images
+	#load images 
 	cod = pygame.image.load(os.path.join(ImgPath,'cod.png'))
-	
+	mb = pygame.image.load(os.path.join(ImgPath,'_MB_.png'))
+	bass = pygame.image.load(os.path.join(ImgPath,'bass'))
+	salmon =  pygame.image.load(os.path.join(ImgPath,'salmon.png'))
+	trout =  pygame.image.load(os.path.join(ImgPath,'trout.png'))
+	tuna =  pygame.image.load(os.path.join(ImgPath,'tuna.png'))
+	wincon =  pygame.image.load(os.path.join(ImgPath,'Wincon.png'))
+
+	aa = pygame.image.load(os.path.join(ImgPath,'aquatic_abuductor.png'))
+	ch =  pygame.image.load(os.path.join(ImgPath,'captain_hooker.png'))
+	ss =  pygame.image.load(os.path.join(ImgPath,'salmon_slayer.png'))
+	tt =  pygame.image.load(os.path.join(ImgPath,'trout_terminator.png'))
+
+	dock =  pygame.image.load(os.path.join(ImgPath,'dock.gif'))#GIF will not be animated TODO
+	menu =  pygame.image.load(os.path.join(ImgPath,'menu.png'))
+	player =  pygame.image.load(os.path.join(ImgPath,'player.png'))
+	longBut =  pygame.image.load(os.path.join(ImgPath,'longbutton.png'))
+	smallBut =  pygame.image.load(os.path.join(ImgPath,'smallbutton.png'))
+
+
+
+
+
+
 	# initialize the pygame module
 	pygame.init()
 	# load and set the logo
