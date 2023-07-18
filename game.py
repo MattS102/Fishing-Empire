@@ -3,7 +3,7 @@ import sympy
 from classes import Player, Fish, Meter
 
 WIDTH, HEIGHT = 1280, 720
-FPS = 240
+FPS = 60
 
 WHITE = (255, 255, 255)
 
@@ -17,7 +17,7 @@ METER_CENTER = (
     HEIGHT // 2 - Meter.METER_SIZE[1] // 2
 )
 
-SEA_LEVEL = HEIGHT * 0.80
+SEA_LEVEL = HEIGHT * 0.75
 
 BOARDWALK_HEIGHT = HEIGHT * 0.50
 
@@ -44,7 +44,7 @@ player = Player(125, BOARDWALK_HEIGHT)
 meter = Meter(METER_CENTER[0], HEIGHT - Meter.METER_SIZE[1] - 15)
 meter_active = False
 
-sprites.add(player, player.bobber)
+sprites.add(player)
 
 
 
@@ -62,12 +62,15 @@ def poll_meter():
     keystate = pygame.key.get_pressed() 
 
     if keystate[pygame.K_m]:
+        sprites.remove(player.bobber)
+        player.bobber.is_cast = False
         meter.stopped = False
 
     if not meter.stopped:
 
         if keystate[pygame.K_SPACE]:
-            player.cast_rod((meter.percentage/100*(WIDTH-150)+150, SEA_LEVEL))
+            sprites.add(player.bobber)
+            player.cast_rod((meter.percentage/100*(WIDTH-350)+350, SEA_LEVEL))
             meter.reset()
             meter.stopped = True
             

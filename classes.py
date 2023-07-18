@@ -96,16 +96,20 @@ class Player(pygame.sprite.Sprite):
 
     class Bobber(pygame.sprite.Sprite):
 
-        BOBBER_SIZE = (10, 20)
+        BOBBER_SIZE = (20, 25)
+
+        BOBBER_IMAGE = pygame.transform.scale(
+        pygame.image.load("images/player/bobber.png"), BOBBER_SIZE
+
+        )
 
         def __init__(self, parent):
             pygame.sprite.Sprite.__init__(self)
             self.parent = parent
             self.position = (0, 0)
-            self.image = pygame.Surface(Player.Bobber.BOBBER_SIZE)
-            self.rect = pygame.Rect(*self.position, *Player.Bobber.BOBBER_SIZE)
-            self.image.fill((255, 0, 0))
+            self.image = Player.Bobber.BOBBER_IMAGE.copy()
             self.is_cast = False
+            self.rect = pygame.Rect(*self.position, *Player.Bobber.BOBBER_SIZE)
         
         def move_to(self, x, y):
             self.position = (x, y)
