@@ -101,6 +101,7 @@ def main():
 		print()
 
 def welcome_message():
+<<<<<<< HEAD
 	print("Welcome to FISHING EMPIRE!")
 	print("\n")
 	print("Fishing Empire is a game all about FISH! The aim of the game is to\n\ncatch the rarest and most valuable fish that you can, and then using\n\nthem to buy upgrades. It won’t be easy though: each cast of your rod is\n\nfollowed by a tricky reaction-based challenge in order to secure\n\nthe fish.")
@@ -109,6 +110,31 @@ def welcome_message():
 	print("\n")
 	print("Good Luck!")
 	print("\n")
+=======
+    drawtext('Welcome to FISHING EMPIRE!', 56 ,dblue, X // 2, (Y // 2) - 256)
+    drawtext('Fishing Empire is a game all about FISH!', 10, dblue, X // 2, (Y // 2) - 128)
+    drawtext('The aim of the game is to catch the rarest and most valuable fish that you can and use them to buy upgrades', 10 ,dblue, X // 2, (Y // 2) - 100)
+    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,X // 2, (Y // 2) - 100)
+    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,X // 2, (Y // 2) - 100)
+
+    descrip4 = font.render("as you progress, the shop will offer better rods and some cool power-ups!  Good Luck!",
+                           True, dblue)
+    descRect = descrip.get_rect()
+    descRect2 = descrip2.get_rect()
+    descRect3 = descrip3.get_rect()
+    descRect4 = descrip4.get_rect()
+
+    descRect.center = (X // 2, (Y // 2) - 128)
+    descRect2.center = (X // 2, (Y // 2) - 100)
+    descRect3.center = (X // 2, (Y // 2) - 72)
+    descRect4.center = (X // 2, (Y // 2) - 44)
+    window.blit(descrip, descRect)
+    window.blit(descrip2, descRect2)
+    window.blit(descrip3, descRect3)
+    window.blit(descrip4, descRect4)
+    pygame.display.update()
+
+>>>>>>> parent of 4100ddd (establish drawtext fuction so we can easily show text wooooo)
 
 # Define a function which shows the user the fishing shop
 def show_shop(fishingRods, powerUps):
