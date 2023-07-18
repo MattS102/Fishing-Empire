@@ -2,6 +2,7 @@ import pygame
 import numpy
 from classes import Player, Fish, Meter
 import os
+import time
 
 WIDTH, HEIGHT = 1280, 720
 FPS = 240
@@ -111,13 +112,15 @@ def welcome_message():
     drawtext('Welcome to FISHING EMPIRE!', 56 ,dblue, WIDTH // 2, (HEIGHT // 2) - 256)
     drawtext('Fishing Empire is a game all about FISH!', 10, dblue, WIDTH // 2, (HEIGHT // 2) - 128)
     drawtext('The aim of the game is to catch the rarest and most valuable fish that you can and use them to buy upgrades', 10 ,dblue, WIDTH // 2, (HEIGHT // 2) - 100)
-    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 100)
-    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 100)
+    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 72)
+    drawtext('as you progress, the shop will offer better rods and some cool power-ups!  Good Luck!', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 44)
 
 
 
 #main TODO
 welcome_message()
+pygame.display.flip()
+time.sleep(5000) #TODO start menu
 running = True
 while running:
     clock.tick(FPS)
