@@ -21,7 +21,8 @@ def main():
 	ss =  pygame.image.load(os.path.join(ImgPath,'salmon_slayer.png'))
 	tt =  pygame.image.load(os.path.join(ImgPath,'trout_terminator.png'))
 
-	dock =  pygame.image.load(os.path.join(ImgPath,'dock.gif'))#GIF will not be animated TODO
+	dock =  pygame.image.load(os.path.join(ImgPath,'dock.png'))#GIF will not be animated TODO
+	dock = pygame.transform.scale(dock, (1024, 1024))
 	menu =  pygame.image.load(os.path.join(ImgPath,'menu.png'))
 	player =  pygame.image.load(os.path.join(ImgPath,'player.png'))
 	longBut =  pygame.image.load(os.path.join(ImgPath,'longbutton.png'))
