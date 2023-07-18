@@ -69,8 +69,8 @@ def main():
 		powerUps.append(i)
 
 
-	welcome_message()
 	window.blit(dock, (0, 0))
+	welcome_message()
 
 	
 
@@ -131,17 +131,17 @@ def main():
 			print()
 '''
 def welcome_message():
-	font = pygame.font.Font('freesansbold.ttf', 32)
-	welcome = font.render('Welcome to FISHING EMPIRE! \n ', True, green)
+	font = pygame.font.Font('freesansbold.ttf', 256)
+	welcome = font.render('Welcome to FISHING EMPIRE! ', True, green)
 
-	font = pygame.font.Font('freesansbold.ttf', 16)
-	descrip = font.render('Fishing Empire is a game all about FISH! The aim of the game is to\n\ncatch the rarest and most valuable fish that you can, and then using\n\nthem to buy upgrades. It won’t be easy though: each cast of your rod is\n\nfollowed by a tricky reaction-based challenge in order to secure\n\nthe fish. \n You will start with a level 1 fishing rod called Fish Stick, but, as\n\nyou progress, the shop will offer better rods and some cool power-ups! \n Good Luck!', True, green)
+	font = pygame.font.Font('freesansbold.ttf', 128)
+	descrip = font.render('Fishing Empire is a game all about FISH! The aim of the game is to\n\ncatch the rarest and most valuable fish that you can, and then using\n\nthem to buy upgrades. It won\'t be easy though: each cast of your rod is\n\nfollowed by a tricky reaction-based challenge in order to secure\n\nthe fish. \n You will start with a level 1 fishing rod called Fish Stick, but, as\n\nyou progress, the shop will offer better rods and some cool power-ups! \n Good Luck!', True, green)
 	welcome.get_rect().center = (X // 2, Y // 2)
-	descrip.get_rect().center = (X // 2, (Y // 2)-32)
+	descrip.get_rect().center = (X // 2, (Y // 2) -256)
 	window.blit(welcome, welcome.get_rect())
 	window.blit(descrip, descrip.get_rect())
 
-	pygame.display.flip()
+	pygame.display.update()
 
 # Define a function which shows the user the fishing shop
 def show_shop(fishingRods, powerUps):
