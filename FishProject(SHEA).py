@@ -10,7 +10,7 @@ def main():
 	#load images 
 	cod = pygame.image.load(os.path.join(ImgPath,'cod.png'))
 	mb = pygame.image.load(os.path.join(ImgPath,'_MB_.png'))
-	bass = pygame.image.load(os.path.join(ImgPath,'bass'))
+	bass = pygame.image.load(os.path.join(ImgPath,'bass.png'))
 	salmon =  pygame.image.load(os.path.join(ImgPath,'salmon.png'))
 	trout =  pygame.image.load(os.path.join(ImgPath,'trout.png'))
 	tuna =  pygame.image.load(os.path.join(ImgPath,'tuna.png'))
@@ -28,23 +28,19 @@ def main():
 	smallBut =  pygame.image.load(os.path.join(ImgPath,'smallbutton.png'))
 
 
-
-
-
-
 	# initialize the pygame module
 	pygame.init()
 	# load and set the logo
-	logo = pygame.image.load("logo32x32.png")
+	'''
+	logo = pygame.image.load("logo32x32.png") TODO
 	pygame.display.set_icon(logo)
 	pygame.display.set_caption("minimal program")
-
+	'''
 	# create a surface on screen that has the size of 240 x 180
 	screen = pygame.display.set_mode((240,180))
 
 	# define a variable to control the main loop
 	running = True
-
 	# main loop
 	while running:
 		# event handling, gets all event from the event queue
