@@ -3,7 +3,7 @@ import sympy
 from classes import Player, Fish, Meter
 
 WIDTH, HEIGHT = 1280, 720
-FPS = 240
+FPS = 60
 
 WHITE = (255, 255, 255)
 ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img'  # fix on ur computer or code will not wok
@@ -116,10 +116,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-            pygame.quit()
-
-            quit()
-
         if event.type == pygame.MOUSEBUTTONUP:
             # Print where the mouse is clicked (for testing purposes)
 
@@ -151,3 +147,4 @@ while running:
 
     pygame.display.flip()
 
+pygame.quit()
