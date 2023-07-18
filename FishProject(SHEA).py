@@ -27,28 +27,19 @@ def main():
 	longBut =  pygame.image.load(os.path.join(ImgPath,'longbutton.png'))
 	smallBut =  pygame.image.load(os.path.join(ImgPath,'smallbutton.png'))
 
-
-	# initialize the pygame module
-	pygame.init()
-	# load and set the logo
-	'''
-	logo = pygame.image.load("logo32x32.png") TODO
-	pygame.display.set_icon(logo)
-	pygame.display.set_caption("minimal program")
-	'''
-	# create a surface on screen that has the size of 240 x 180
-	screen = pygame.display.set_mode((240,180))
-
-	# define a variable to control the main loop
-	running = True
-	# main loop
-	while running:
-		# event handling, gets all event from the event queue
-		for event in pygame.event.get():
-		# only do something if the event is of type QUIT
-			if event.type == pygame.QUIT:
-				# change the value to False, to exit the main loop
-				running = False
+	# define the RGB value for white,
+	#  green, blue colour .
+	white = (255, 255, 255)
+	green = (0, 255, 0)
+	blue = (0, 0, 128)
+	# assigning values to X and Y variable
+	X = 400
+	Y = 400
+	
+	# create the display surface object
+	# of specific dimension..e(X, Y).
+	display_surface = pygame.display.set_mode((X, Y))
+	
 	# Set up starting variables
 	mainRod = "Fish Stick"
 	mainPowerUp = ""
@@ -74,48 +65,61 @@ def main():
 
 	for i in var2:
 		powerUps.append(i)
-
 	welcome_message()
+	while True:
+		for event in pygame.event.get():
+	
+			# if event object type is QUIT
+			# then quitting the pygame
+			# and program both.
+			if event.type == pygame.QUIT:
+	
+				# deactivates the pygame library
+				pygame.quit()
+	
+				# quit the program.
+				quit()
+		# Draws the surface object to the screen.
+		pygame.display.update()
+		# Use a while loop to check if the user wants to throw the fishing line
+		while (input("Throwing Fishing Line: ") == "y"):
 
-	# Use a while loop to check if the user wants to throw the fishing line
-	while (input("Throwing Fishing Line: ") == "y"):
+			# Check if the user has any current power ups being used
+			if (powerUpCounter > 0):
+				powerUpCounter -= 1
+				print("You have " + str(powerUpCounter) + " uses for your power up left.")
 
-		# Check if the user has any current power ups being used
-		if (powerUpCounter > 0):
-			powerUpCounter -= 1
-			print("You have " + str(powerUpCounter) + " uses for your power up left.")
+			# Get a random number between 0 and 4 (This will be changed so it is weighted by rarity)
+			fishType = fishesList[random.randint(0,4)]
 
-		# Get a random number between 0 and 4 (This will be changed so it is weighted by rarity)
-		fishType = fishesList[random.randint(0,4)]
+			# Call the function to calculate how many points the user should have
+			totalPoints = get_points(fishType, totalPoints)
 
-		# Call the function to calculate how many points the user should have
-		totalPoints = get_points(fishType, totalPoints)
+			print()
+			# Ask the user what thy would like to do (3 options)
+			userChoice = input("What would you like to do: \n1. Show Shop\n2. Show Inventory\n3. Throw Fishing Line\n")
 
-		print()
-		# Ask the user what thy would like to do (3 options)
-		userChoice = input("What would you like to do: \n1. Show Shop\n2. Show Inventory\n3. Throw Fishing Line\n")
+			# Check if the answer is 1, 2 or 3
+			if (userChoice == "1"):
+				# Call 2 functions to shop the shop and prompt the user to buy an item
+				show_shop(fishingRods, powerUps)
+				totalPoints, usableItems = get_items(totalPoints, fishingRods, powerUps, usableItems, fishingRodDic, powerUpsDic)
 
-		# Check if the answer is 1, 2 or 3
-		if (userChoice == "1"):
-			# Call 2 functions to shop the shop and prompt the user to buy an item
-			show_shop(fishingRods, powerUps)
-			totalPoints, usableItems = get_items(totalPoints, fishingRods, powerUps, usableItems, fishingRodDic, powerUpsDic)
+			elif (userChoice == "2"):
+				# Show the user their inventory and use any items in it (if possible)
+				usableItems, mainRod, mainPowerUp, powerUpCounter = show_inventory(fishingRods, powerUps, totalPoints, mainRod, usableItems, mainPowerUp, powerUpCounter)
 
-		elif (userChoice == "2"):
-			# Show the user their inventory and use any items in it (if possible)
-			usableItems, mainRod, mainPowerUp, powerUpCounter = show_inventory(fishingRods, powerUps, totalPoints, mainRod, usableItems, mainPowerUp, powerUpCounter)
+			elif (userChoice != "3"):
+				# Tell the user their input was not an option
+				print("That is not an option.")
 
-		elif (userChoice != "3"):
-			# Tell the user their input was not an option
-			print("That is not an option.")
+			# Tell the user their current rod, power up, and total points (FOR TESTING PURPOSES)
+			print()
+			print ("Main Rod: " + mainRod)
+			print("Main Power Up: " + mainPowerUp)
+			print("Total Points: " + str(totalPoints))
 
-		# Tell the user their current rod, power up, and total points (FOR TESTING PURPOSES)
-		print()
-		print ("Main Rod: " + mainRod)
-		print("Main Power Up: " + mainPowerUp)
-		print("Total Points: " + str(totalPoints))
-
-		print()
+			print()
 
 def welcome_message():
 	print("Welcome to FISHING EMPIRE!")
