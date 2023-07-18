@@ -3,71 +3,76 @@ import random
 import pygame
 import os
 
+pygame.init()
 #src path
 ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img'
+#load images 
+cod = pygame.image.load(os.path.join(ImgPath,'cod.png'))
+mb = pygame.image.load(os.path.join(ImgPath,'_MB_.png'))
+bass = pygame.image.load(os.path.join(ImgPath,'bass.png'))
+salmon =  pygame.image.load(os.path.join(ImgPath,'salmon.png'))
+trout =  pygame.image.load(os.path.join(ImgPath,'trout.png'))
+tuna =  pygame.image.load(os.path.join(ImgPath,'tuna.png'))
+wincon =  pygame.image.load(os.path.join(ImgPath,'Wincon.png'))
+
+aa = pygame.image.load(os.path.join(ImgPath,'aquatic_abuductor.png'))
+ch =  pygame.image.load(os.path.join(ImgPath,'captain_hooker.png'))
+ss =  pygame.image.load(os.path.join(ImgPath,'salmon_slayer.png'))
+tt =  pygame.image.load(os.path.join(ImgPath,'trout_terminator.png'))
+
+dock =  pygame.image.load(os.path.join(ImgPath,'dock.png'))#GIF will not be animated TODO
+dock = pygame.transform.scale(dock, (1024, 1024))
+menu =  pygame.image.load(os.path.join(ImgPath,'menu.png'))
+player =  pygame.image.load(os.path.join(ImgPath,'player.png'))
+longBut =  pygame.image.load(os.path.join(ImgPath,'longbutton.png'))
+smallBut =  pygame.image.load(os.path.join(ImgPath,'smallbutton.png'))
+
+# define the RGB value for white,
+#  green, blue colour .
+white = (255, 255, 255)
+green = (0, 255, 0)
+blue = (0, 0, 128)
+# assigning values to X and Y variable
+X = 1024
+Y = 1024
+
+
+# create the display surface object
+# of specific dimension..e(X, Y).
+window = pygame.display.set_mode((X, Y))
+
+# Set up starting variables
+mainRod = "Fish Stick"
+mainPowerUp = ""
+totalPoints = 0
+usableItems = []
+
+# Variable to check how many uses the user has for their power up
+powerUpCounter = 0
+
+# Set up a list/dictioanry for the fishes, fishing rods, and power ups (Point values may change).
+fishesList = ["Cod", "Bass", "Trout", "Salmon", "Tuna"]
+fishingRodDic = {"Captain Hooker" : 50, "The Salmon Slayer" : 150, "The Trout Terminator" : 400, "The Aquatic Abductor" : 1000}
+powerUpsDic = {"Slow-Time" : 50, "1 in a Million" : 80, "Double Down" : 100}
+
+# Set up a list of all the fishing rod and power up options
+var1 = fishingRodDic.keys()
+var2 = powerUpsDic.keys()
+fishingRods = []
+powerUps = []
 # Define Main function
 def main():
-	#load images 
-	cod = pygame.image.load(os.path.join(ImgPath,'cod.png'))
-	mb = pygame.image.load(os.path.join(ImgPath,'_MB_.png'))
-	bass = pygame.image.load(os.path.join(ImgPath,'bass.png'))
-	salmon =  pygame.image.load(os.path.join(ImgPath,'salmon.png'))
-	trout =  pygame.image.load(os.path.join(ImgPath,'trout.png'))
-	tuna =  pygame.image.load(os.path.join(ImgPath,'tuna.png'))
-	wincon =  pygame.image.load(os.path.join(ImgPath,'Wincon.png'))
-
-	aa = pygame.image.load(os.path.join(ImgPath,'aquatic_abuductor.png'))
-	ch =  pygame.image.load(os.path.join(ImgPath,'captain_hooker.png'))
-	ss =  pygame.image.load(os.path.join(ImgPath,'salmon_slayer.png'))
-	tt =  pygame.image.load(os.path.join(ImgPath,'trout_terminator.png'))
-
-	dock =  pygame.image.load(os.path.join(ImgPath,'dock.png'))#GIF will not be animated TODO
-	dock = pygame.transform.scale(dock, (1024, 1024))
-	menu =  pygame.image.load(os.path.join(ImgPath,'menu.png'))
-	player =  pygame.image.load(os.path.join(ImgPath,'player.png'))
-	longBut =  pygame.image.load(os.path.join(ImgPath,'longbutton.png'))
-	smallBut =  pygame.image.load(os.path.join(ImgPath,'smallbutton.png'))
-
-	# define the RGB value for white,
-	#  green, blue colour .
-	white = (255, 255, 255)
-	green = (0, 255, 0)
-	blue = (0, 0, 128)
-	# assigning values to X and Y variable
-	X = 1024
-	Y = 1024
-	
-	# create the display surface object
-	# of specific dimension..e(X, Y).
-	window = pygame.display.set_mode((X, Y))
-	
-	# Set up starting variables
-	mainRod = "Fish Stick"
-	mainPowerUp = ""
-	totalPoints = 0
-	usableItems = []
-
-	# Variable to check how many uses the user has for their power up
-	powerUpCounter = 0
-
-	# Set up a list/dictioanry for the fishes, fishing rods, and power ups (Point values may change).
-	fishesList = ["Cod", "Bass", "Trout", "Salmon", "Tuna"]
-	fishingRodDic = {"Captain Hooker" : 50, "The Salmon Slayer" : 150, "The Trout Terminator" : 400, "The Aquatic Abductor" : 1000}
-	powerUpsDic = {"Slow-Time" : 50, "1 in a Million" : 80, "Double Down" : 100}
-
-	# Set up a list of all the fishing rod and power up options
-	var1 = fishingRodDic.keys()
-	var2 = powerUpsDic.keys()
-	fishingRods = []
-	powerUps = []
-
 	for char in var1:
 		fishingRods.append(char)
 
 	for i in var2:
 		powerUps.append(i)
+
+
 	welcome_message()
 	window.blit(dock, (0, 0))
+
+	
 
 	while True:
 		#update screen every time
@@ -126,14 +131,17 @@ def main():
 			print()
 '''
 def welcome_message():
-	print("Welcome to FISHING EMPIRE!")
-	print("\n")
-	print("Fishing Empire is a game all about FISH! The aim of the game is to\n\ncatch the rarest and most valuable fish that you can, and then using\n\nthem to buy upgrades. It won’t be easy though: each cast of your rod is\n\nfollowed by a tricky reaction-based challenge in order to secure\n\nthe fish.")
-	print("\n")
-	print("You will start with a level 1 fishing rod called Fish Stick, but, as\n\nyou progress, the shop will offer better rods and some cool power-ups! ")
-	print("\n")
-	print("Good Luck!")
-	print("\n")
+	font = pygame.font.Font('freesansbold.ttf', 32)
+	welcome = font.render('Welcome to FISHING EMPIRE! \n ', True, green)
+
+	font = pygame.font.Font('freesansbold.ttf', 16)
+	descrip = font.render('Fishing Empire is a game all about FISH! The aim of the game is to\n\ncatch the rarest and most valuable fish that you can, and then using\n\nthem to buy upgrades. It won’t be easy though: each cast of your rod is\n\nfollowed by a tricky reaction-based challenge in order to secure\n\nthe fish. \n You will start with a level 1 fishing rod called Fish Stick, but, as\n\nyou progress, the shop will offer better rods and some cool power-ups! \n Good Luck!', True, green)
+	welcome.get_rect().center = (X // 2, Y // 2)
+	descrip.get_rect().center = (X // 2, (Y // 2)-32)
+	window.blit(welcome, welcome.get_rect())
+	window.blit(descrip, descrip.get_rect())
+
+	pygame.display.flip()
 
 # Define a function which shows the user the fishing shop
 def show_shop(fishingRods, powerUps):
