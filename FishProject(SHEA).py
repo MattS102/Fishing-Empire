@@ -33,12 +33,12 @@ def main():
 	green = (0, 255, 0)
 	blue = (0, 0, 128)
 	# assigning values to X and Y variable
-	X = 400
-	Y = 400
+	X = 1024
+	Y = 1024
 	
 	# create the display surface object
 	# of specific dimension..e(X, Y).
-	display_surface = pygame.display.set_mode((X, Y))
+	window = pygame.display.set_mode((X, Y))
 	
 	# Set up starting variables
 	mainRod = "Fish Stick"
@@ -66,7 +66,11 @@ def main():
 	for i in var2:
 		powerUps.append(i)
 	welcome_message()
+	window.blit(dock, (0, 0))
+
 	while True:
+		#update screen every time
+		pygame.display.flip()
 		for event in pygame.event.get():
 	
 			# if event object type is QUIT
@@ -79,9 +83,8 @@ def main():
 	
 				# quit the program.
 				quit()
-		# Draws the surface object to the screen.
-		pygame.display.update()
 		# Use a while loop to check if the user wants to throw the fishing line
+		''' TODO make the input for clicking button
 		while (input("Throwing Fishing Line: ") == "y"):
 
 			# Check if the user has any current power ups being used
@@ -120,7 +123,7 @@ def main():
 			print("Total Points: " + str(totalPoints))
 
 			print()
-
+'''
 def welcome_message():
 	print("Welcome to FISHING EMPIRE!")
 	print("\n")
