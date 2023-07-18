@@ -1,6 +1,8 @@
 import pygame
-import sympy
+import numpy
 from classes import Player, Fish, Meter
+import os
+import time
 
 WIDTH, HEIGHT = 1280, 720
 FPS = 60
@@ -20,7 +22,27 @@ METER_CENTER = (
 SEA_LEVEL = HEIGHT * 0.75
 
 BOARDWALK_HEIGHT = HEIGHT * 0.50
+dblue = (0,0,139)
 
+cod = pygame.image.load('src/img/cod.png')
+
+mb = pygame.image.load('src/img/_MB_.png')
+bass = pygame.image.load('src/img/bass.png')
+salmon =  pygame.image.load('src/img/salmon.png')
+trout =  pygame.image.load('src/img/trout.png')
+tuna =  pygame.image.load('src/img/tuna.png')
+wincon =  pygame.image.load('src/img/Wincon.png')
+
+aa = pygame.image.load('src/img/aquatic_abuductor.png')
+ch =  pygame.image.load('src/img/captain_hooker.png')
+ss =  pygame.image.load('src/img/salmon_slayer.png')
+tt =  pygame.image.load('src/img/trout_terminator.png')
+
+dock =  pygame.image.load('src/img/dock.png')
+menu =  pygame.image.load('src/img/menu.png')
+player =  pygame.image.load('src/img/player.png')
+longBut =  pygame.image.load('src/img/longbutton.png')
+smallBut =  pygame.image.load('src/img/smallbutton.png')
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -81,6 +103,27 @@ def poll_meter():
 
     return meter.percentage if meter.stopped else None
 
+def drawtext(text, size, color, x , y , font = 'mariofont.ttf'):
+    font = pygame.font.Font(os.path.join(f"src/img/{font}"),size)
+    txt = font.render(text, True, color)
+    rec = txt.get_rect()
+    rec.center = (x,y)
+    screen.blit(txt, rec)
+    
+def welcome_message():
+
+    drawtext('Welcome to FISHING EMPIRE!', 56 ,dblue, WIDTH // 2, (HEIGHT // 2) - 256)
+    drawtext('Fishing Empire is a game all about FISH!', 10, dblue, WIDTH // 2, (HEIGHT // 2) - 128)
+    drawtext('The aim of the game is to catch the rarest and most valuable fish that you can and use them to buy upgrades', 10 ,dblue, WIDTH // 2, (HEIGHT // 2) - 100)
+    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 72)
+    drawtext('as you progress, the shop will offer better rods and some cool power-ups!  Good Luck!', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 44)
+
+
+
+#main TODO
+welcome_message()
+pygame.display.flip()
+time.sleep(5000) #TODO start menu
 running = True
 while running:
     clock.tick(FPS)
