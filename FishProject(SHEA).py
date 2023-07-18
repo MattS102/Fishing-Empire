@@ -5,7 +5,7 @@ import os
 
 pygame.init()
 #src path
-ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img'
+ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img' #fix on ur computer or code will not wok
 #load images 
 cod = pygame.image.load(os.path.join(ImgPath,'cod.png'))
 mb = pygame.image.load(os.path.join(ImgPath,'_MB_.png'))
@@ -20,8 +20,10 @@ ch =  pygame.image.load(os.path.join(ImgPath,'captain_hooker.png'))
 ss =  pygame.image.load(os.path.join(ImgPath,'salmon_slayer.png'))
 tt =  pygame.image.load(os.path.join(ImgPath,'trout_terminator.png'))
 
-dock =  pygame.image.load(os.path.join(ImgPath,'dock.png'))#GIF will not be animated TODO
-dock = pygame.transform.scale(dock, (1024, 1024))
+dock =  pygame.image.load(os.path.join(ImgPath,'dock.png'))
+dock2 =  pygame.image.load(os.path.join(ImgPath,'2dock.png'))
+dock = pygame.transform.scale(dock, (1536, 864))
+dock2 = pygame.transform.scale(dock, (1536, 864))
 menu =  pygame.image.load(os.path.join(ImgPath,'menu.png'))
 player =  pygame.image.load(os.path.join(ImgPath,'player.png'))
 longBut =  pygame.image.load(os.path.join(ImgPath,'longbutton.png'))
@@ -32,9 +34,10 @@ smallBut =  pygame.image.load(os.path.join(ImgPath,'smallbutton.png'))
 white = (255, 255, 255)
 green = (0, 255, 0)
 blue = (0, 0, 128)
+dblue = (0, 0, 139)
 # assigning values to X and Y variable
-X = 1024
-Y = 1024
+X = 1536
+Y = 864
 
 
 # create the display surface object
@@ -131,16 +134,30 @@ def main():
 			print()
 '''
 def welcome_message():
-	font = pygame.font.Font('freesansbold.ttf', 256)
-	welcome = font.render('Welcome to FISHING EMPIRE! ', True, green)
+	font = pygame.font.Font(os.path.join(ImgPath,'mariofont.ttf'), 52)
+	welcome = font.render('Welcome to FISHING EMPIRE! ', True, dblue)
+	welRect = welcome.get_rect()
+	font = pygame.font.Font(os.path.join(ImgPath,'mariofont.ttf'), 10)
+	descrip = font.render("Fishing Empire is a game all about FISH!", True, dblue)
+	descrip2 = font.render("The aim of the game is to catch the rarest and most valuable fish that you can and use them to buy upgrades", True, dblue)
+	descrip3 = font.render("It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.", True, dblue)
+	descrip4 = font.render("as you progress, the shop will offer better rods and some cool power-ups!  Good Luck!", True, dblue)
+	descRect = descrip.get_rect()
+	descRect2 = descrip2.get_rect()
+	descRect3 = descrip3.get_rect()
+	descRect4 = descrip4.get_rect()
 
-	font = pygame.font.Font('freesansbold.ttf', 128)
-	descrip = font.render('Fishing Empire is a game all about FISH! The aim of the game is to\n\ncatch the rarest and most valuable fish that you can, and then using\n\nthem to buy upgrades. It won\'t be easy though: each cast of your rod is\n\nfollowed by a tricky reaction-based challenge in order to secure\n\nthe fish. \n You will start with a level 1 fishing rod called Fish Stick, but, as\n\nyou progress, the shop will offer better rods and some cool power-ups! \n Good Luck!', True, green)
-	welcome.get_rect().center = (X // 2, Y // 2)
-	descrip.get_rect().center = (X // 2, (Y // 2) -256)
-	window.blit(welcome, welcome.get_rect())
-	window.blit(descrip, descrip.get_rect())
 
+	welRect.center = (X // 2, (Y // 2)-256)
+	descRect.center = (X // 2, (Y // 2)-128)
+	descRect2.center = (X // 2, (Y // 2)-100)
+	descRect3.center = (X // 2, (Y // 2)-72)
+	descRect4.center = (X // 2, (Y // 2)-44)
+	window.blit(welcome, welRect)
+	window.blit(descrip, descRect)
+	window.blit(descrip2, descRect2)
+	window.blit(descrip3, descRect3)
+	window.blit(descrip4, descRect4)	
 	pygame.display.update()
 
 # Define a function which shows the user the fishing shop
