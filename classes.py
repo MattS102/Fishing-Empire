@@ -1,4 +1,5 @@
 import pygame
+import random
 from numpy.random import choice as weighted_choice
 
 
@@ -10,6 +11,15 @@ class Fish(pygame.sprite.Sprite):
         "Very Rare": 50,
         "Exotic": 100,
         "Black Market": 200,
+    }
+
+    SPECIES_DICT = {
+        'bass': 2,
+        'cod': 3,
+        'trout': 1,
+        'salmon': 12,
+        'tuna': 15,
+        'wincon': 50
     }
 
     def __init__(self) -> None:
@@ -32,7 +42,7 @@ class Fish(pygame.sprite.Sprite):
             rarity_choice
         ]  # Set rarity attribute based on rarity choice above
 
-        fishesList = ["Cod", "Bass", "Trout", "Salmon", "Tuna"]
+        self.species = random.choice(Fish.SPECIES)
 
 
 class Player(pygame.sprite.Sprite):
@@ -42,15 +52,27 @@ class Player(pygame.sprite.Sprite):
         pygame.image.load("images/entities/player.png"), PLAYER_SIZE
     )
 
+    SHOP_SIZE = (700, 700)
+
+    SHOP_IMAGE = pygame.transform.scale(
+        pygame.image.load("images/menu/menu.png"), SHOP_SIZE
+    )
+
+
     def __init__(self, position_x, position_y) -> None:
         pygame.sprite.Sprite.__init__(self)
-        self.inventory = []
+        self.fish_inventory = []
+        self.powerup_inventory = []
+        self.rod_inventory = []
         self.position = (position_x, position_y)
         self.direction = 0
-
         self.rect = pygame.Rect(*self.position, *Player.PLAYER_SIZE)
-
         self.image = Player.PLAYER_IMAGE.copy()
+
+        self.shop_opened = False
+
+        self.bobber = self.Bobber(self)
+
 
     def update(self):
         # self.rotate(45)
@@ -59,6 +81,39 @@ class Player(pygame.sprite.Sprite):
     def rotate(self, angle):
         self.image = pygame.transform.rotate(Player.PLAYER_IMAGE, angle)
         self.rect = self.image.get_rect(center=self.rect.center)
+
+    def open_shop(self, screen):
+
+        screen.blit(Player.SHOP_IMAGE, (screen.get_width()//2 - Player.SHOP_SIZE[0]//2, screen.get_height()//2 - Player.SHOP_SIZE[1]//2 - 60))
+        self.shop_opened = True
+    
+    def close_shop(self):
+        self.shoped_opened = False
+    
+    def cast_rod(self, position):
+        self.bobber.is_cast = True
+        self.bobber.move_to(*position)
+
+    class Bobber(pygame.sprite.Sprite):
+
+        BOBBER_SIZE = (10, 20)
+
+        def __init__(self, parent):
+            pygame.sprite.Sprite.__init__(self)
+            self.parent = parent
+            self.position = (0, 0)
+            self.image = pygame.Surface(Player.Bobber.BOBBER_SIZE)
+            self.rect = pygame.Rect(*self.position, *Player.Bobber.BOBBER_SIZE)
+            self.image.fill((255, 0, 0))
+            self.is_cast = False
+        
+        def move_to(self, x, y):
+            self.position = (x, y)
+            self.rect.x, self.rect.y = x, y
+
+        def draw(self, screen):
+            if self.is_cast:
+                screen.blit(self.image, self.position)
 
 
 class Meter(pygame.sprite.Sprite):

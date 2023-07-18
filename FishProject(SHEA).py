@@ -2,7 +2,105 @@
 import random
 import pygame
 import os
+import platform
 
+<<<<<<< HEAD
+#src path
+ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img' if platform.platform() == 'Windows' else 'src/img'
+# Define Main function
+def main():
+	#load images
+	cod = pygame.image.load(os.path.join(ImgPath,'cod.png'))
+	
+	# initialize the pygame module
+	pygame.init()
+	# load and set the logo
+	#logo = pygame.image.load("logo32x32.png")
+	#pygame.display.set_icon(logo)
+	pygame.display.set_caption("minimal program")
+
+	# create a surface on screen that has the size of 240 x 180
+	screen = pygame.display.set_mode((240,180))
+
+	# define a variable to control the main loop
+	running = True
+
+	# main loop
+	while running:
+		# event handling, gets all event from the event queue
+		for event in pygame.event.get():
+		# only do something if the event is of type QUIT
+			if event.type == pygame.QUIT:
+				# change the value to False, to exit the main loop
+				running = False
+	# Set up starting variables
+	mainRod = "Fish Stick"
+	mainPowerUp = ""
+	totalPoints = 0
+	usableItems = []
+
+	# Variable to check how many uses the user has for their power up
+	powerUpCounter = 0
+
+	# Set up a list/dictioanry for the fishes, fishing rods, and power ups (Point values may change).
+	fishesList = ["Cod", "Bass", "Trout", "Salmon", "Tuna"]
+	fishingRodDic = {"Captain Hooker" : 50, "The Salmon Slayer" : 150, "The Trout Terminator" : 400, "The Aquatic Abductor" : 1000}
+	powerUpsDic = {"Slow-Time" : 50, "1 in a Million" : 80, "Double Down" : 100}
+
+	# Set up a list of all the fishing rod and power up options
+	var1 = fishingRodDic.keys()
+	var2 = powerUpsDic.keys()
+	fishingRods = []
+	powerUps = []
+
+	for char in var1:
+		fishingRods.append(char)
+
+	for i in var2:
+		powerUps.append(i)
+
+	welcome_message()
+
+	# Use a while loop to check if the user wants to throw the fishing line
+	while (input("Throwing Fishing Line: ") == "y"):
+
+		# Check if the user has any current power ups being used
+		if (powerUpCounter > 0):
+			powerUpCounter -= 1
+			print("You have " + str(powerUpCounter) + " uses for your power up left.")
+
+		# Get a random number between 0 and 4 (This will be changed so it is weighted by rarity)
+		fishType = fishesList[random.randint(0,4)]
+
+		# Call the function to calculate how many points the user should have
+		totalPoints = get_points(fishType, totalPoints)
+
+		print()
+		# Ask the user what thy would like to do (3 options)
+		userChoice = input("What would you like to do: \n1. Show Shop\n2. Show Inventory\n3. Throw Fishing Line\n")
+
+		# Check if the answer is 1, 2 or 3
+		if (userChoice == "1"):
+			# Call 2 functions to shop the shop and prompt the user to buy an item
+			show_shop(fishingRods, powerUps)
+			totalPoints, usableItems = get_items(totalPoints, fishingRods, powerUps, usableItems, fishingRodDic, powerUpsDic)
+
+		elif (userChoice == "2"):
+			# Show the user their inventory and use any items in it (if possible)
+			usableItems, mainRod, mainPowerUp, powerUpCounter = show_inventory(fishingRods, powerUps, totalPoints, mainRod, usableItems, mainPowerUp, powerUpCounter)
+
+		elif (userChoice != "3"):
+			# Tell the user their input was not an option
+			print("That is not an option.")
+
+		# Tell the user their current rod, power up, and total points (FOR TESTING PURPOSES)
+		print()
+		print ("Main Rod: " + mainRod)
+		print("Main Power Up: " + mainPowerUp)
+		print("Total Points: " + str(totalPoints))
+
+		print()
+=======
 pygame.init()
 # src path
 ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img'  # fix on ur computer or code will not wok
@@ -137,6 +235,7 @@ def drawtext(text, size, color, x , y , font = 'mariofont.ttf'):
     rec = txt.get_rect()
     rec.center = (x,y)
     window.blit(txt, rec)
+>>>>>>> 4100ddd117692c0523036bee1cf8d73aafbd7482
 
 def welcome_message():
     drawtext('Welcome to FISHING EMPIRE!', 56 ,dblue, X // 2, (Y // 2) - 256)
