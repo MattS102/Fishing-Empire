@@ -18,7 +18,10 @@ clock = pygame.time.Clock()
 sprites = pygame.sprite.Group()
 # -  Add new sprites here -
 player = Player(30, PLAYER_CENTER[1])
+meter = Meter(100, 0)
 sprites.add(player)
+sprites.add(meter)
+sprites.add(meter.bar)
 
 
 # - - - - - - - - - - - - -

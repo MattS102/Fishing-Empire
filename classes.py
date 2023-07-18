@@ -74,31 +74,51 @@ class Meter(pygame.sprite.Sprite):
         self.bar = self.Bar(self)
 
     def update(self):
-        self.bar.move()
+        pass
 
     class Bar(pygame.sprite.Sprite):
         def __init__(self, parent) -> None:
             pygame.sprite.Sprite.__init__(self)
             self.parent = parent
-            self.position = parent.position
-            self.rect = pygame.Rect(*self.position, 3, 71)
+            self.position = (self.parent.rect.x + self.parent.rect.width * (4 / 82), self.parent.rect.y)
+            self.rect = pygame.Rect(*self.position, 3, parent.rect.height)
             self.image = pygame.transform.scale(
                 pygame.image.load("images/meter/bar.png"),
                 (self.rect.width, self.rect.height),
             )
             self.is_increasing = True
+            self.percentage = 0 
+            self.current = 0
+            self.stopped = False
 
         def move(self):
-            change = 20 if self.is_increasing else -20
+            speed = 1
+            start = self.parent.rect.x + self.parent.rect.width * (6 / 82)
+            end = self.parent.rect.x + self.parent.rect.width - self.parent.rect.width * (6 / 82)
+            self.percentage = (self.rect.x + 2 - start) / (end - start) * 100
 
-            if self.parent.rect.x - self.rect.x > -60 and not self.is_increasing:
+            step = speed * (1 if self.is_increasing else -1)
+
+            
+            if start - self.rect.x > step and not self.is_increasing:
                 self.is_increasing = True
-
-            elif (
-                self.parent.rect.x + self.parent.rect.width - self.rect.x < 60
-                and self.is_increasing
-            ):
+            
+            if end - self.rect.x < step and self.is_increasing:
                 self.is_increasing = False
 
-            self.position = (self.position[0] + change, self.position[1])
-            self.rect.x += change
+
+            step = speed * (1 if self.is_increasing else -1)
+
+
+            self.position = (self.position[0] + step, self.position[1])
+            self.rect.x += step
+
+            keystate = pygame.key.get_pressed()
+
+            if keystate[pygame.K_SPACE]:
+                self.stopped = True
+                print(self.percentage)
+        
+        def update(self):
+            if not self.stopped:
+                self.move()
