@@ -2,9 +2,10 @@
 import random
 import pygame
 import os
+import platform
 
 #src path
-ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img'
+ImgPath = 'C:\\Users\\owenc\\Documents\\GitHub\\tufts_project\\src\\img' if platform.platform() == 'Windows' else 'src/img'
 # Define Main function
 def main():
 	#load images
@@ -13,8 +14,8 @@ def main():
 	# initialize the pygame module
 	pygame.init()
 	# load and set the logo
-	logo = pygame.image.load("logo32x32.png")
-	pygame.display.set_icon(logo)
+	#logo = pygame.image.load("logo32x32.png")
+	#pygame.display.set_icon(logo)
 	pygame.display.set_caption("minimal program")
 
 	# create a surface on screen that has the size of 240 x 180
