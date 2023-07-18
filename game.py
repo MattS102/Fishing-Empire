@@ -31,8 +31,15 @@ sprites.add(player)
 
 
 # - - - - - - - - - - - - -
-def poll_meter():
-    keystate = pygame.key.get_pressed()
+
+
+def poll_meter():       
+
+    # function to return the percentage of the meter
+    # is stopped. If the meter is not stopped, this 
+    # function will return None
+
+    keystate = pygame.key.get_pressed() 
 
     if keystate[pygame.K_m]:
         meter.stopped = False
@@ -60,8 +67,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-            
+
         if event.type == pygame.MOUSEBUTTONUP:
+            # Print where the mouse is clicked (for testing purposes)
+
             pos = pygame.mouse.get_pos()
             print(pos)
     
@@ -76,7 +85,6 @@ while running:
         
         # get meter result here. for example:
         # score = result * 10
-
 
         result = None
         meter.reset()
