@@ -101,16 +101,7 @@ def main():
 		print()
 
 def welcome_message():
-<<<<<<< HEAD
-	print("Welcome to FISHING EMPIRE!")
-	print("\n")
-	print("Fishing Empire is a game all about FISH! The aim of the game is to\n\ncatch the rarest and most valuable fish that you can, and then using\n\nthem to buy upgrades. It won’t be easy though: each cast of your rod is\n\nfollowed by a tricky reaction-based challenge in order to secure\n\nthe fish.")
-	print("\n")
-	print("You will start with a level 1 fishing rod called Fish Stick, but, as\n\nyou progress, the shop will offer better rods and some cool power-ups! ")
-	print("\n")
-	print("Good Luck!")
-	print("\n")
-=======
+
     drawtext('Welcome to FISHING EMPIRE!', 56 ,dblue, X // 2, (Y // 2) - 256)
     drawtext('Fishing Empire is a game all about FISH!', 10, dblue, X // 2, (Y // 2) - 128)
     drawtext('The aim of the game is to catch the rarest and most valuable fish that you can and use them to buy upgrades', 10 ,dblue, X // 2, (Y // 2) - 100)
@@ -133,8 +124,6 @@ def welcome_message():
     window.blit(descrip3, descRect3)
     window.blit(descrip4, descRect4)
     pygame.display.update()
-
->>>>>>> parent of 4100ddd (establish drawtext fuction so we can easily show text wooooo)
 
 # Define a function which shows the user the fishing shop
 def show_shop(fishingRods, powerUps):
