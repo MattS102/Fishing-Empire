@@ -62,19 +62,32 @@ class Player(pygame.sprite.Sprite):
 
 
 class Meter(pygame.sprite.Sprite):
+
+    METER_SIZE = (710, 51)
+
     def __init__(self, position_x, position_y) -> None:
         pygame.sprite.Sprite.__init__(self)
 
         self.position = (position_x, position_y)
-        self.rect = pygame.Rect(*self.position, 410, 71)
+        self.rect = pygame.Rect(*self.position, *Meter.METER_SIZE)
         self.image = pygame.transform.scale(
             pygame.image.load("images/meter/meter.png"),
             (self.rect.width, self.rect.height),
         )
         self.bar = self.Bar(self)
+        self.stopped = False
+        self.percentage = self.bar.percentage
+    
+    def draw(self, screen):
+        screen.blit(self.image, self.position)
 
     def update(self):
-        pass
+        self.stopped = self.bar.stopped
+        self.percentage = self.bar.percentage
+        self.bar.update()
+    
+    def reset(self):
+        self.bar.reset()
 
     class Bar(pygame.sprite.Sprite):
         def __init__(self, parent) -> None:
@@ -92,7 +105,7 @@ class Meter(pygame.sprite.Sprite):
             self.stopped = False
 
         def move(self):
-            speed = 1
+            speed = 25
             start = self.parent.rect.x + self.parent.rect.width * (6 / 82)
             end = self.parent.rect.x + self.parent.rect.width - self.parent.rect.width * (6 / 82)
             self.percentage = (self.rect.x + 2 - start) / (end - start) * 100
@@ -113,12 +126,15 @@ class Meter(pygame.sprite.Sprite):
             self.position = (self.position[0] + step, self.position[1])
             self.rect.x += step
 
-            keystate = pygame.key.get_pressed()
-
-            if keystate[pygame.K_SPACE]:
-                self.stopped = True
-                print(self.percentage)
+        def draw(self, screen):
+            screen.blit(self.image, self.position)
         
         def update(self):
             if not self.stopped:
                 self.move()
+        
+        def reset(self):
+
+            self.position = (self.parent.rect.x + self.parent.rect.width * (4 / 82), self.parent.rect.y)
+            self.rect = pygame.Rect(*self.position, 3, self.parent.rect.height)
+            self.stopped = False
