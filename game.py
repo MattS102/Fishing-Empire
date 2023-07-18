@@ -123,7 +123,7 @@ def welcome_message():
 #main TODO
 welcome_message()
 pygame.display.flip()
-time.sleep(5000) #TODO start menu
+#TODO start menu
 running = True
 while running:
     clock.tick(FPS)
