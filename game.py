@@ -4,6 +4,7 @@ from random import randrange
 from classes import Player, Fish, Meter
 import os
 import time
+import random
 
 WIDTH, HEIGHT = 1280, 720
 FPS = 60
@@ -72,6 +73,14 @@ meter_active = False
 sprites.add(player)
 sprites.add(meter, meter.bar)
 
+# light shade of the button 
+color_light = (170,170,170) 
+# dark shade of the button 
+color_dark = (100,100,100) 
+
+
+# - - - - - - - - - - - - -
+
 
 def poll_meter():       
 
@@ -114,7 +123,7 @@ def drawtext(text, size, color, x , y , font = 'mariofont.ttf'):
     
 def welcome_message():
 
-    drawtext('Welcome to FISHING EMPIRE!', 56 ,dblue, WIDTH // 2, (HEIGHT // 2) - 256)
+    drawtext('Welcome to FISHING EMPIRE!', 40 ,dblue, WIDTH // 2, (HEIGHT // 2) - 256)
     drawtext('Fishing Empire is a game all about FISH!', 10, dblue, WIDTH // 2, (HEIGHT // 2) - 128)
     drawtext('The aim of the game is to catch the rarest and most valuable fish that you can and use them to buy upgrades', 10 ,dblue, WIDTH // 2, (HEIGHT // 2) - 100)
     drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 72)
@@ -133,7 +142,68 @@ welcome_message()
 pygame.display.flip()
 #TODO start menu
 running = True
+stmenu = True
 while running:
+    #start menu
+    if stmenu:
+        while True:
+            clock.tick(FPS)
+            current_time = pygame.time.get_ticks()
+            welcome_message()
+            for ev in pygame.event.get(): 
+                
+                if ev.type == pygame.QUIT: 
+                    pygame.quit() 
+                    
+                #checks if a mouse is clicked 
+                if ev.type == pygame.MOUSEBUTTONDOWN: 
+                    
+                    #if the mouse is clicked on the 
+                    # button the game is terminated 
+                    if WIDTH/2 <= mouse[0] <= WIDTH/2+140 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                        pygame.quit() 
+                    if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                        stmenu = False
+
+
+            if current_time%20 == 0:
+                if background_index == 1:
+                    background_index = 0
+                elif background_index == 0:
+                    background_index = 1
+                screen.blit(pygame.transform.scale(BACKGROUNDS[background_index], (WIDTH, HEIGHT)), (0, 0))
+            # stores the (x,y) coordinates into 
+            # the variable as a tuple 
+            mouse = pygame.mouse.get_pos() 
+            
+            # if mouse is hovered on a button it 
+            # changes to lighter shade 
+            if WIDTH/2 <= mouse[0] <= WIDTH/2+200 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                pygame.draw.rect(screen,color_light,[WIDTH/2+30,HEIGHT/2,140,40]) 
+                
+            else: 
+                pygame.draw.rect(screen,color_dark,[WIDTH/2+30,HEIGHT/2,140,40]) 
+                
+            if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                pygame.draw.rect(screen,color_light,[WIDTH/2-200,HEIGHT/2,200,40]) 
+                
+            else: 
+                pygame.draw.rect(screen,color_dark,[WIDTH/2-200,HEIGHT/2,200,40]) 
+            
+            # superimposing the text onto our button 
+            drawtext("start",35, dblue ,WIDTH/2-100,HEIGHT/2+20)
+            
+            # superimposing the text onto our button 
+            drawtext("quit",35, dblue ,WIDTH/2+100,HEIGHT/2+20)
+            #update background every 2 sec
+
+
+
+            if not stmenu:
+                screen.blit(pygame.transform.scale(proportional_background, (WIDTH, HEIGHT)), (0, 0))
+                pygame.display.update()
+                break
+            pygame.display.update()
     clock.tick(FPS)
     current_time = pygame.time.get_ticks()
 
