@@ -67,9 +67,11 @@ meter = Meter(METER_CENTER[0], HEIGHT - Meter.METER_SIZE[1] - 15)
 meter_active = False
 
 sprites.add(player)
-
-
-
+# light shade of the button 
+color_light = (170,170,170) 
+  
+# dark shade of the button 
+color_dark = (100,100,100) 
 
 
 # - - - - - - - - - - - - -
@@ -125,7 +127,56 @@ welcome_message()
 pygame.display.flip()
 #TODO start menu
 running = True
+stmenu = True
 while running:
+    #start menu
+    if stmenu:
+        while True:
+            for ev in pygame.event.get(): 
+                
+                if ev.type == pygame.QUIT: 
+                    pygame.quit() 
+                    
+                #checks if a mouse is clicked 
+                if ev.type == pygame.MOUSEBUTTONDOWN: 
+                    
+                    #if the mouse is clicked on the 
+                    # button the game is terminated 
+                    if WIDTH/2 <= mouse[0] <= WIDTH/2+140 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                        pygame.quit() 
+                    if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                        stmenu = False
+            
+            # stores the (x,y) coordinates into 
+            # the variable as a tuple 
+            mouse = pygame.mouse.get_pos() 
+            
+            # if mouse is hovered on a button it 
+            # changes to lighter shade 
+            if WIDTH/2 <= mouse[0] <= WIDTH/2+200 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                pygame.draw.rect(screen,color_light,[WIDTH/2+30,HEIGHT/2,140,40]) 
+                
+            else: 
+                pygame.draw.rect(screen,color_dark,[WIDTH/2+30,HEIGHT/2,140,40]) 
+                
+            if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                pygame.draw.rect(screen,color_light,[WIDTH/2-200,HEIGHT/2,200,40]) 
+                
+            else: 
+                pygame.draw.rect(screen,color_dark,[WIDTH/2-200,HEIGHT/2,200,40]) 
+            
+            # superimposing the text onto our button 
+            drawtext("start",35, dblue ,WIDTH/2-100,HEIGHT/2+20)
+            
+            # superimposing the text onto our button 
+            drawtext("quit",35, dblue ,WIDTH/2+100,HEIGHT/2+20)
+            
+            # updates the frames of the game 
+            pygame.display.update() 
+            if not stmenu:
+                screen.blit(pygame.transform.scale(proportional_background, (WIDTH, HEIGHT)), (0, 0))
+                pygame.display.flip()
+                break
     clock.tick(FPS)
     current_time = pygame.time.get_ticks()
 
