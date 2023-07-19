@@ -33,7 +33,7 @@ bass = pygame.image.load('src/img/bass.png')
 salmon =  pygame.image.load('src/img/salmon.png')
 trout =  pygame.image.load('src/img/trout.png')
 tuna =  pygame.image.load('src/img/tuna.png')
-wincon =  pygame.image.load('src/img/Wincon.png')
+Wincon =  pygame.image.load('src/img/Wincon.png')
 
 aa = pygame.image.load('src/img/aquatic_abuductor.png')
 ch =  pygame.image.load('src/img/captain_hooker.png')
