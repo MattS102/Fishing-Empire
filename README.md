@@ -3,6 +3,7 @@ Fishing empire is a game about catching fish in a timing-based minigame, then se
 We created this game for the final project at the Tufts Precollege Coding Academy
 
 ```game.py``` contains the main code for the game, ```classes.py``` contains classes for rarity, fish, and the player.
+The game's sprites and other images are contained in ```images```.
 
 This game was created by Shea Patel, Tim Slater, Matt Schoenfeld, Ishwar Madhusudan, and Owen Chen
 
