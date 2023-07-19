@@ -1,5 +1,6 @@
 import pygame
 import numpy
+from random import randrange
 from classes import Player, Fish, Meter
 import os
 import time
@@ -52,27 +53,24 @@ clock = pygame.time.Clock()
 next_background_event = pygame.USEREVENT + 1
 pygame.time.set_timer(next_background_event, 2000)
 
+
 background1 = pygame.image.load("images/scene/dock1.png")
 background2 = pygame.image.load("images/scene/dock2.png")
 proportional_background = pygame.image.load("images/scene/2dock.png")
+proportional_background = pygame.transform.scale(proportional_background, (WIDTH, HEIGHT))
 
 BACKGROUNDS = [background1, background2]
 background_index = 0
-screen.blit(pygame.transform.scale(proportional_background, (WIDTH, HEIGHT)), (0, 0))
+screen.blit(proportional_background, (0, 0))
 
 sprites = pygame.sprite.Group()
 # -  Add new sprites here -
-player = Player(125, BOARDWALK_HEIGHT)
+player = Player(screen, 125, BOARDWALK_HEIGHT)
 meter = Meter(METER_CENTER[0], HEIGHT - Meter.METER_SIZE[1] - 15)
 meter_active = False
 
 sprites.add(player)
-
-
-
-
-
-# - - - - - - - - - - - - -
+sprites.add(meter, meter.bar)
 
 
 def poll_meter():       
@@ -103,6 +101,10 @@ def poll_meter():
 
     return meter.percentage if meter.stopped else None
 
+
+# - - - - - - - - - - - - -
+
+
 def drawtext(text, size, color, x , y , font = 'mariofont.ttf'):
     font = pygame.font.Font(os.path.join(f"src/img/{font}"),size)
     txt = font.render(text, True, color)
@@ -118,7 +120,13 @@ def welcome_message():
     drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 72)
     drawtext('as you progress, the shop will offer better rods and some cool power-ups!  Good Luck!', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 44)
 
+def rng_chance(percent_chance):
+    # Input: a percent change scaled by 1/100 so 5 as input translates to 0.05
+    # Output: True or False at random depending on the percent change
+    # Remember that this will be called every game tick so the percent_chanage is PER tick 
+    # so it should be kinda low
 
+    return randrange(0, 10000) < percent_chance
 
 #main TODO
 welcome_message()
@@ -135,11 +143,8 @@ while running:
 
             pygame.quit()
 
-            quit()
-
         if event.type == pygame.MOUSEBUTTONUP:
             # Print where the mouse is clicked (for testing purposes)
-
             pos = pygame.mouse.get_pos()
             print(pos)
         
@@ -147,16 +152,64 @@ while running:
             if event.key == pygame.K_e:
                 player.shop_opened = not player.shop_opened
         
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                if player.bobber.is_cast:
+                    if player.has_fish:
+
+                        print("- Caught a fish -")
+                        print(f"Rarity = {meter.percentage} ")
+
+                        player.fish_inventory.append(Fish(meter.percentage))
+                        print(player.fish_inventory[-1])
+
+
+                        player.has_fish = False
+
+
+                
+                    else: 
+                        print("- No fish caught -")
+                
+                    sprites.remove(meter, meter.bar)
+                    meter.reset()
+                    meter.stopped = True
+                    sprites.remove(player.bobber)
+                    player.bobber.is_cast = False
+                    
+                
+                else:
+                    
+                    if not meter.stopped:
+                        
+                        sprites.add(player.bobber)
+                        player.cast_rod(screen, (meter.percentage/100*(WIDTH-350)+350, SEA_LEVEL))
+                        player.bobber.is_cast = True
+                        meter.reset()
+                        meter.stopped = True
+                        sprites.remove(meter, meter.bar)
+            
+                    else:
+                        sprites.add(meter, meter.bar)
+
+                        #meter.update()
+
         # if event.type == next_background_event:
             # screen.blit(pygame.transform.scale(BACKGROUNDS[background_index%2], (WIDTH, HEIGHT)), (0, 0))
             # background_index += 1
+        
+    if rng_chance(50) and player.bobber.is_cast and not player.has_fish:
+        player.has_fish = True
+        sprites.add(meter, meter.bar)
+        print("- Fish on the line -")
     
-
+    if rng_chance(50) and player.has_fish:
+        player.has_fish = False
+        print("- Fish was lost -")
+    
+    
+    screen.blit(proportional_background, (0, 0))
     sprites.update()
-
-    screen.blit(pygame.transform.scale(proportional_background, (WIDTH, HEIGHT)), (0, 0))
-
-    poll_meter()
 
     if player.shop_opened:
         player.open_shop(screen)
@@ -164,7 +217,7 @@ while running:
         player.close_shop()
 
     sprites.draw(screen)
-
+    
 
     pygame.display.flip()
 
