@@ -3,6 +3,7 @@ import numpy
 from classes import Player, Fish, Meter
 import os
 import time
+import random
 
 WIDTH, HEIGHT = 1280, 720
 FPS = 60
@@ -58,7 +59,7 @@ proportional_background = pygame.image.load("images/scene/2dock.png")
 
 BACKGROUNDS = [background1, background2]
 background_index = 0
-screen.blit(pygame.transform.scale(proportional_background, (WIDTH, HEIGHT)), (0, 0))
+screen.blit(pygame.transform.scale(BACKGROUNDS[1], (WIDTH, HEIGHT)), (0, 0))
 
 sprites = pygame.sprite.Group()
 # -  Add new sprites here -
@@ -132,6 +133,9 @@ while running:
     #start menu
     if stmenu:
         while True:
+            clock.tick(FPS)
+            current_time = pygame.time.get_ticks()
+            welcome_message()
             for ev in pygame.event.get(): 
                 
                 if ev.type == pygame.QUIT: 
@@ -146,7 +150,14 @@ while running:
                         pygame.quit() 
                     if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
                         stmenu = False
-            
+
+
+            if current_time%20 == 0:
+                if background_index == 1:
+                    background_index = 0
+                elif background_index == 0:
+                    background_index = 1
+                screen.blit(pygame.transform.scale(BACKGROUNDS[background_index], (WIDTH, HEIGHT)), (0, 0))
             # stores the (x,y) coordinates into 
             # the variable as a tuple 
             mouse = pygame.mouse.get_pos() 
@@ -170,13 +181,15 @@ while running:
             
             # superimposing the text onto our button 
             drawtext("quit",35, dblue ,WIDTH/2+100,HEIGHT/2+20)
-            
-            # updates the frames of the game 
-            pygame.display.update() 
+            #update background every 2 sec
+
+
+
             if not stmenu:
                 screen.blit(pygame.transform.scale(proportional_background, (WIDTH, HEIGHT)), (0, 0))
-                pygame.display.flip()
+                pygame.display.update()
                 break
+            pygame.display.update()
     clock.tick(FPS)
     current_time = pygame.time.get_ticks()
 
