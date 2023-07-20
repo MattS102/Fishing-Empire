@@ -53,7 +53,7 @@ smallBut =  pygame.image.load('src/img/smallbutton.png')
 
 inventorybk = pygame.image.load('src/img/InventoryBackround.png')
 pygame.init()
-logo = pygame.image.load('src/img/logo.png')
+logo = pygame.image.load('src/img/Logo.png')
 pygame.display.set_icon(logo)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fish Game")
@@ -268,7 +268,7 @@ while running:
                     if player.has_fish:
 
                         drawtext("Caught a fish!!",40, dblue ,600,250)
-                        drawtext(f"Rarity = {meter.percentage}", 25, dblue, 600,350)
+                        drawtext(f"{Fish(meter.precentage)}", 25, dblue, 600,350)
                         pygame.display.flip()
                         player.fish_inventory.append(Fish(meter.percentage))
                         print(player.fish_inventory[-1])
