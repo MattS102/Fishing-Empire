@@ -280,6 +280,9 @@ while running:
                         buttons.append(shop_button)
 
                     player.menu_opened = not player.menu_opened
+                
+                if event.key == pygame.K_ESCAPE and inventory_opened:
+                    inventory_opened = False
                     
                     
             
@@ -354,8 +357,8 @@ while running:
             if event.type == pygame.MOUSEBUTTONUP:
                 if 50 <= pos[0] <= len(player.rod_inventory)*150 and 100 <= pos[1] <= 200:
                     player.current_rod = player.rod_inventory[(pos[0]//150)]
-                    print(player.current_rod)
-                       
+                    player.image = chararodarr[player.current_rod]
+            
 
                         
                         
