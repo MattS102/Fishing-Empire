@@ -52,6 +52,7 @@ class Fish(pygame.sprite.Sprite):
         ]  # Set rarity attribute based on rarity choice above
 
         self.name = f"{self.rarity} {self.species}"
+
     
     def __repr__(self):
         return self.name
