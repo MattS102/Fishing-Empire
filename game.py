@@ -1,9 +1,6 @@
 import pygame
-import numpy
 from random import randrange, randint
 from classes import Player, Fish, Meter, Button, Item, ItemFrame
-import os
-import time
 
 WIDTH, HEIGHT = 1280, 720
 FPS = 60
@@ -27,6 +24,10 @@ dblue = (0,0,139)
 
 print('Loading...')
 
+pygame.init()
+logo = pygame.image.load('src/img/logo.png')
+pygame.display.set_icon(logo)
+
 # Fish Images 
 cod = pygame.image.load('src/img/cod.png')
 mb = pygame.image.load('src/img/_MB_.png')
@@ -47,10 +48,10 @@ Trout =  pygame.image.load('src/img/trout.png')
 Tuna =  pygame.image.load('src/img/tuna.png')
 Wincon =  pygame.image.load('src/img/Wincon.png')
 fishimgarr = {'Cod': Cod, 'Bass': Bass, 'Salmon': Salmon, 'Trout': Trout, 'Tuna': Tuna, 'Wincon': Wincon}
-aapl = pygame.transform.scale(pygame.image.load('src/img/aquatic_abuductor.png'),(128,128))
-chpl =  pygame.transform.scale(pygame.image.load('src/img/captain_hooker.png'),(128,128))
-sspl =  pygame.transform.scale(pygame.image.load('src/img/salmon_slayer.png'),(128,128))
-ttpl =  pygame.transform.scale(pygame.image.load('src/img/trout_terminator.png'),(128,128))
+aapl = pygame.transform.scale(pygame.image.load('src/img/aquatic_abuductor.png'),Player.PLAYER_SIZE)
+chpl =  pygame.transform.scale(pygame.image.load('src/img/captain_hooker.png'),Player.PLAYER_SIZE)
+sspl =  pygame.transform.scale(pygame.image.load('src/img/salmon_slayer.png'),Player.PLAYER_SIZE)
+ttpl =  pygame.transform.scale(pygame.image.load('src/img/trout_terminator.png'),Player.PLAYER_SIZE)
 aa = pygame.image.load('src/img/aquatic_abductor_item.png')
 ch =  pygame.image.load('src/img/captain_hooker_item.png')
 ss =  pygame.image.load('src/img/salmon_slayer_item.png')
@@ -66,9 +67,6 @@ player =  pygame.image.load('src/img/player.png')
 longBut =  pygame.image.load('src/img/longbutton.png')
 smallBut =  pygame.image.load('src/img/smallbutton.png')
 
-pygame.init()
-logo = pygame.image.load('src/img/logo.png')
-pygame.display.set_icon(logo)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fish Game")
 clock = pygame.time.Clock() 
@@ -112,52 +110,61 @@ color_dark = (100,100,100)
 lgreen = (144, 238, 144)
 
 
+global text_list
+text_list = []
+
 for i, (rod, price) in enumerate(rods.items()):
     new_frame = ItemFrame(Item(rod.lower().replace(" ", "_"), price), i*200 + 255, 100)
     item_frames.append(new_frame)
 
 
-# - - - - - - - - - - - - -
+def drawtext(text, size, color, x , y , duration=None, font_path = 'src/img/mariofont.ttf'):
+    init_time = pygame.time.get_ticks()
+    text_list.append((init_time, duration, [text, size, color, x, y, font_path]))
 
-
-def poll_meter():       
-
-    # function to return the percentage of the meter
-    # is stopped. If the meter is not stopped, this 
-    # function will return None
-
-    keystate = pygame.key.get_pressed() 
-
-    if keystate[pygame.K_m]:
-        sprites.remove(player.bobber)
-        player.bobber.is_cast = False
-        meter.stopped = False
-
-    if not meter.stopped:
-
-        if keystate[pygame.K_SPACE]:
-            sprites.add(player.bobber)
-            player.cast_rod((meter.percentage/100*(WIDTH-350)+350, SEA_LEVEL))
-            meter.reset()
-            meter.stopped = True
-            
-        else:
-            screen.blit(meter.image, meter.position)
-            screen.blit(meter.bar.image, meter.bar.position)
-            meter.update()
-
-    return meter.percentage if meter.stopped else None
-
-
-# - - - - - - - - - - - - -
-
-
-def drawtext(text, size, color, x , y , font_path = 'src/img/mariofont.ttf'):
+def static_draw_text(text, size, color, x, y, font_path = 'src/img/mariofont.ttf'):
     font = pygame.font.Font(font_path ,size)
     txt = font.render(text, True, color)
     rec = txt.get_rect()
     rec.center = (x,y)
     screen.blit(txt, rec)
+    
+
+def draw_all_text():
+    _text_list = []
+    global text_list
+
+    for text_and_params in text_list:
+        init_time, duration, params = text_and_params
+        current_time =  pygame.time.get_ticks()
+
+        if duration == None:
+
+            text, size, color, x, y, font_path = params
+
+            font = pygame.font.Font(font_path ,size)
+            txt = font.render(text, True, color)
+            rec = txt.get_rect()
+            rec.center = (x,y)
+            screen.blit(txt, rec)
+
+            if stmenu:
+                _text_list.append(text_and_params)
+
+        elif current_time <= init_time + duration:
+
+            text, size, color, x, y, font_path = params
+
+            font = pygame.font.Font(font_path ,size)
+            txt = font.render(text, True, color)
+            rec = txt.get_rect()
+            rec.center = (x,y)
+            screen.blit(txt, rec)
+        
+            _text_list.append(text_and_params)
+        
+        text_list = _text_list
+        
     
 def welcome_message():
 
@@ -174,7 +181,6 @@ def rng_chance(percent_chance):
     # so it should be kinda low
 
     return randrange(0, 10000) < percent_chance
-
 
 #main
 screen.fill((0,0,0))
@@ -207,7 +213,7 @@ while running:
                     if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40:
                         #flashes when clicked
                         for i in range(8):
-                            drawtext("start",35, lgreen if i % 2 == 0 else color_dark  ,WIDTH/2-100,HEIGHT/2+20)
+                            static_draw_text("start",35, lgreen if i % 2 == 0 else color_dark  ,WIDTH/2-100,HEIGHT/2+20)
                             pygame.display.update()
                             pygame.time.delay(100)
 
@@ -228,22 +234,24 @@ while running:
             # if mouse is hovered on a button it 
             # changes to lighter shade 
             if WIDTH/2 <= mouse[0] <= WIDTH/2+200 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
-                drawtext("quit",35, lgreen ,WIDTH/2+100,HEIGHT/2+20) 
+                static_draw_text("quit",35, lgreen ,WIDTH/2+100,HEIGHT/2+20) 
                 
             else: 
-                drawtext("quit",35, color_light ,WIDTH/2+100,HEIGHT/2+20) 
+                static_draw_text("quit",35, color_light ,WIDTH/2+100,HEIGHT/2+20) 
                 
             if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
-                drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20) 
+                static_draw_text("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20) 
                 
             else: 
-                drawtext("start",35, color_light ,WIDTH/2-100,HEIGHT/2+20) 
+                static_draw_text("start",35, color_light ,WIDTH/2-100,HEIGHT/2+20) 
             
             #update background every 2 sec
+            draw_all_text()
 
             if not stmenu:
                 screen.blit(pygame.transform.scale(proportional_background, (WIDTH, HEIGHT)), (0, 0))
                 pygame.display.update()
+                draw_all_text()
                 break
 
             pygame.display.update()
@@ -264,16 +272,16 @@ while running:
         
         if True not in (shop_opened, inventory_opened):
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_e:
+                if event.key in (pygame.K_e, pygame.K_ESCAPE):
                     if player.menu_opened:
             
                         buttons.remove(inventory_button)
                         buttons.remove(shop_button)
                     else:
-                        inventory_button = Button('Inventory', WIDTH//2, 125, 450, 50, print)
+                        inventory_button = Button('Inventory', WIDTH//2, HEIGHT//2-100, 450, 50, print)
                         buttons.append(inventory_button)
 
-                        shop_button = Button('Shop', WIDTH//2, 325, 450, 50, print)
+                        shop_button = Button('Shop', WIDTH//2, HEIGHT//2, 450, 50, print)
                         buttons.append(shop_button)
 
                     player.menu_opened = not player.menu_opened
@@ -294,12 +302,16 @@ while running:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if player.bobber.is_cast:
+
                         if player.has_fish:
+                            
+                            text_list = []
+                            drawtext("- Caught a fish!! -",32, dblue ,610,215, duration=3000)
 
-                            drawtext("Caught a fish!!",128, dblue ,610,215)
-                            drawtext(f"Rarity = {meter.percentage}", 64, dblue ,610,250)
+                            new_fish = Fish(meter.percentage)
+                            drawtext(repr(new_fish), 16, dblue ,610,250,duration=3000)
 
-                            player.fish_inventory.append(Fish(meter.percentage))
+                            player.fish_inventory.append(new_fish)
                             print(player.fish_inventory[-1])
 
 
@@ -308,8 +320,10 @@ while running:
 
                     
                         else: 
+                            text_list = []
                             print("- No fish caught -")
-                            drawtext("No fish caught",128, dblue ,610,215)
+                            drawtext("- No fish caught -",32, dblue ,610,215, duration=3000)
+                        
 
                     
                         sprites.remove(meter, meter.bar)
@@ -347,7 +361,8 @@ while running:
                     if frame.buy_button.collidepoint(pygame.mouse.get_pos()):
 
                         if player.buy_item(frame.item): 
-                            frame.item.is_bought = True
+                            frame.is_bought = True
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         shop_opened = False
@@ -356,7 +371,7 @@ while running:
             if event.type == pygame.MOUSEBUTTONUP:
                 if 50 <= pos[0] <= len(player.rod_inventory)*150 and 100 <= pos[1] <= 200:
                     player.current_rod = player.rod_inventory[((pos[0]-95)//150)]
-                    player.image = pygame.transform.scale(chararodarr[player.current_rod],(128,128))
+                    player.image = pygame.transform.scale(chararodarr[player.current_rod], Player.PLAYER_SIZE)
                 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -374,33 +389,45 @@ while running:
     if rng_chance(50) and player.bobber.is_cast and not player.has_fish:
         player.has_fish = True
         sprites.add(meter, meter.bar)
+        text_list = []
+        drawtext("- Fish on the line -",32, dblue ,610,215, duration=3000)
         print("- Fish on the line -")
     
-    if rng_chance(50) and player.has_fish:
+    if rng_chance(60) and player.has_fish:
         player.has_fish = False
+        text_list = []
+        drawtext("- Fish was lost -",32, dblue ,610,215, duration=3000)
         print("- Fish was lost -")
     
     
     screen.blit(proportional_background, (0, 0))
     sprites.update()
+    draw_all_text()
 
     if True not in (shop_opened, inventory_opened):
         
         sprites.draw(screen)
 
         if player.menu_opened:
+            text_list = []
             player.open_menu(screen)
         else:
             player.close_menu()
 
         for button in buttons:
             button.draw(screen)
+
+        if player.bobber.is_cast:
+            drawtext('[Rod Casted]', 16, pygame.Color(0, 0, 0), WIDTH-100, 10)
+        
+        draw_all_text()
     
     else:
         screen.blit(proportional_background, (0, 0))
         panel_size = (1200, 600)
  
         if shop_opened:
+            text_list = []
             shop_menu_panel = pygame.transform.scale(pygame.image.load('images/menu/menu_long.png'), panel_size)
             screen.blit(shop_menu_panel, (screen.get_width()//2 - panel_size[0]//2, screen.get_height()//2 - panel_size[1]//2))
 
@@ -415,6 +442,7 @@ while running:
                 frame.draw(screen)
         
         elif inventory_opened:
+            text_list = []
             cnt = 0   
             panel_size = (1200, 800)
 

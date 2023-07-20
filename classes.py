@@ -91,7 +91,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = 0
         self.rect = pygame.Rect(*self.position, *Player.PLAYER_SIZE)
         self.image = Player.PLAYER_IMAGE.copy()
-        self.coins = 0
+        self.coins = 1000
 
         self.menu_opened = False
 
@@ -110,7 +110,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def open_menu(self, screen):
-
         screen.blit(Player.SHOP_IMAGE, (screen.get_width()//2 - Player.SHOP_SIZE[0]//2, screen.get_height()//2 - Player.SHOP_SIZE[1]//2 - 30))
         self.menu_opened = True
     
@@ -142,7 +141,10 @@ class Player(pygame.sprite.Sprite):
 
         if self.coins - item.price >= 0:
             self.coins -= item.price 
-            self.rod_inventory += item
+            self.rod_inventory.append(item)
+
+            print(self.coins)
+
             return True
         
         else:
@@ -176,9 +178,13 @@ class Player(pygame.sprite.Sprite):
             self.rect.x, self.rect.y = x, y
 
         def update(self):
-            rod_postion = (self.parent.position[0]+120, self.parent.position[1]+15)
+            if self.parent.current_rod == 'aa':
+                rod_position = (self.parent.position[0]+128, self.parent.position[1]+57)
+            else:
+                rod_position = (self.parent.position[0]+120, self.parent.position[1]+15)
+
             bobber_top_position = (self.position[0]+15, self.position[1])
-            pygame.draw.line(self.screen, pygame.Color(0, 0, 0, 0), rod_postion, bobber_top_position , 3)
+            pygame.draw.line(self.screen, pygame.Color(0, 0, 0, 0), rod_position, bobber_top_position , 3)
 
 
 class Meter(pygame.sprite.Sprite):
@@ -264,6 +270,7 @@ class Button(pygame.sprite.Sprite):
     def __init__(self, text, x, y, width, height, clicked_function, button_type='long', font_size=32) -> None:
 
         pygame.sprite.Sprite.__init__(self)
+        
         self.font_size = font_size
         self.position = (x-width/2, y-height//2)
         self.rect = pygame.Rect(x-width//2, y-height//2, width, height)
@@ -298,10 +305,11 @@ class ItemFrame(pygame.sprite.Sprite):
     def draw(self, screen):
 
         image_rect = self.image.get_rect()
+        item_rect = self.item.image.get_rect()
 
         pygame.draw.rect(self.image, pygame.Color(255, 255, 255), image_rect, 1)
         pygame.draw.line(self.image, pygame.Color(255, 255, 255), (image_rect.x, image_rect.y + 155), (image_rect.x + image_rect.width, image_rect.y + 155))
-        self.image.blit(self.item.image, (image_rect.x//2 - self.item.rect.width, image_rect.y//2 - self.item.rect.height))
+        self.image.blit(pygame.transform.scale(self.item.image, Player.PLAYER_SIZE), (image_rect.x + image_rect.width//2 - item_rect.width - 30, image_rect.y + image_rect.height//2 - item_rect.height - 50))
 
         font = pygame.font.Font('fonts/8-Bit-Madness.ttf', 16)
 
@@ -315,9 +323,10 @@ class ItemFrame(pygame.sprite.Sprite):
             self.image.blit(text2, (image_rect.x+image_rect.width//2-text2_rect.width//2, image_rect.y+image_rect.height-text2_rect.height//2-15))
 
         else:
-            text1 = font.render(f"[ Owne d]", True, pygame.Color(255, 255, 255))
+            text1 = font.render(f"[ Owned ]", True, pygame.Color(255, 255, 255))
             text1_rect = text1.get_rect()
             self.image.blit(text1, (image_rect.x+image_rect.width//2-text1_rect.width//2, image_rect.y+image_rect.height-text1_rect.height//2-25))
+        
         
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
@@ -327,4 +336,3 @@ class Item(pygame.sprite.Sprite):
         self.name = name
         self.price = price
         self.image = pygame.image.load(f'images/player/{name}.png')
-        self.rect = pygame.Rect(0, 0, 64, 64)
