@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         pygame.image.load("images/entities/player.png"), PLAYER_SIZE
     )
 
-    SHOP_SIZE = (700, 700)
+    SHOP_SIZE = (600, 600)
 
     SHOP_IMAGE = pygame.transform.scale(
         pygame.image.load("images/menu/menu.png"), SHOP_SIZE
@@ -79,7 +79,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = pygame.Rect(*self.position, *Player.PLAYER_SIZE)
         self.image = Player.PLAYER_IMAGE.copy()
 
-        self.shop_opened = False
+        self.menu_opened = False
 
         self.bobber = self.Bobber(self)
 
@@ -94,12 +94,12 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(Player.PLAYER_IMAGE, angle)
         self.rect = self.image.get_rect(center=self.rect.center)
 
-    def open_shop(self, screen):
+    def open_menu(self, screen):
 
-        screen.blit(Player.SHOP_IMAGE, (screen.get_width()//2 - Player.SHOP_SIZE[0]//2, screen.get_height()//2 - Player.SHOP_SIZE[1]//2 - 60))
-        self.shop_opened = True
+        screen.blit(Player.SHOP_IMAGE, (screen.get_width()//2 - Player.SHOP_SIZE[0]//2, screen.get_height()//2 - Player.SHOP_SIZE[1]//2 - 30))
+        self.menu_opened = True
     
-    def close_shop(self):
+    def close_menu(self):
         self.shoped_opened = False
     
     def cast_rod(self, screen, position):
@@ -232,3 +232,28 @@ class Meter(pygame.sprite.Sprite):
             self.position = (self.parent.rect.x + self.parent.rect.width * (4 / 82), self.parent.rect.y)
             self.rect = pygame.Rect(*self.position, 3, self.parent.rect.height)
             self.stopped = False
+
+class Button(pygame.sprite.Sprite):
+
+    def __init__(self, text, x, y, width, height, clicked_function, button_type='long', font_size=32) -> None:
+
+        pygame.sprite.Sprite.__init__(self)
+        self.font_size = font_size
+        self.position = (x-width/2, y-height//2)
+        self.rect = pygame.Rect(x-width//2, y-height//2, width, height)
+        self.image = pygame.transform.scale(pygame.image.load(f"images/menu/{button_type}_button.png"), (width, height))
+        self.text = text
+        self.clicked_function = clicked_function
+    
+
+    def draw(self, screen):
+        font = pygame.font.Font('fonts/8-Bit-Madness.ttf', self.font_size)
+        text = font.render(self.text, True, pygame.Color(0, 0, 0))
+        rect = text.get_rect()
+        rect.center = (self.rect.x + self.rect.width//2, self.rect.y + self.rect.height//2) 
+        screen.blit(self.image, self.position)
+        screen.blit(text, rect)
+
+    def click_handler(self):
+        self.clicked_function('hello')
+

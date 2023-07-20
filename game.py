@@ -1,7 +1,7 @@
 import pygame
 import numpy
 from random import randrange
-from classes import Player, Fish, Meter
+from classes import Player, Fish, Meter, Button
 import os
 import time
 import random
@@ -73,6 +73,8 @@ meter_active = False
 sprites.add(player)
 sprites.add(meter, meter.bar)
 
+buttons = []
+
 # light shade of the button 
 color_light = (170,170,170) 
 # dark shade of the button 
@@ -114,8 +116,8 @@ def poll_meter():
 # - - - - - - - - - - - - -
 
 
-def drawtext(text, size, color, x , y , font = 'mariofont.ttf'):
-    font = pygame.font.Font(os.path.join(f"src/img/{font}"),size)
+def drawtext(text, size, color, x , y , font_path = 'src/img/mariofont.ttf'):
+    font = pygame.font.Font(font_path ,size)
     txt = font.render(text, True, color)
     rec = txt.get_rect()
     rec.center = (x,y)
@@ -123,11 +125,11 @@ def drawtext(text, size, color, x , y , font = 'mariofont.ttf'):
     
 def welcome_message():
 
-    drawtext('Welcome to FISHING EMPIRE!', 40 ,dblue, WIDTH // 2, (HEIGHT // 2) - 256)
-    drawtext('Fishing Empire is a game all about FISH!', 10, dblue, WIDTH // 2, (HEIGHT // 2) - 128)
-    drawtext('The aim of the game is to catch the rarest and most valuable fish that you can and use them to buy upgrades', 10 ,dblue, WIDTH // 2, (HEIGHT // 2) - 100)
-    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 72)
-    drawtext('as you progress, the shop will offer better rods and some cool power-ups!  Good Luck!', 10 ,dblue,WIDTH // 2, (HEIGHT // 2) - 44)
+    drawtext('Welcome to FISHING EMPIRE!', 80 ,dblue, WIDTH // 2, (HEIGHT // 2) - 256, font_path='fonts/8-Bit-Madness.ttf')
+    drawtext('Fishing Empire is a game all about FISH!', 20, dblue, WIDTH // 2, (HEIGHT // 2) - 128)
+    drawtext('The aim of the game is to catch the rarest and most valuable fish that you can and use them to buy upgrades', 20 ,dblue, WIDTH // 2, (HEIGHT // 2) - 100, font_path='fonts/8-Bit-Madness.ttf')
+    drawtext('It won\'t be easy though: each cast of your rod is followed by a tricky reaction-based challenge in order to secure the fish.', 20 ,dblue,WIDTH // 2, (HEIGHT // 2) - 72, font_path='fonts/8-Bit-Madness.ttf')
+    drawtext('as you progress, the shop will offer better rods and some cool power-ups!  Good Luck!', 20 ,dblue,WIDTH // 2, (HEIGHT // 2) - 44, font_path='fonts/8-Bit-Madness.ttf')
 
 def rng_chance(percent_chance):
     # Input: a percent change scaled by 1/100 so 5 as input translates to 0.05
@@ -166,12 +168,12 @@ while running:
                         stmenu = False
 
 
-            if current_time%20 == 0:
-                if background_index == 1:
-                    background_index = 0
-                elif background_index == 0:
-                    background_index = 1
-                screen.blit(pygame.transform.scale(BACKGROUNDS[background_index], (WIDTH, HEIGHT)), (0, 0))
+            # if current_time%20 == 0:
+                #if background_index == 1:
+                    #background_index = 0
+                #elif background_index == 0:
+                    #background_index = 1
+                #screen.blit(pygame.transform.scale(BACKGROUNDS[background_index], (WIDTH, HEIGHT)), (0, 0))
             # stores the (x,y) coordinates into 
             # the variable as a tuple 
             mouse = pygame.mouse.get_pos() 
@@ -197,13 +199,13 @@ while running:
             drawtext("quit",35, dblue ,WIDTH/2+100,HEIGHT/2+20)
             #update background every 2 sec
 
-
-
             if not stmenu:
                 screen.blit(pygame.transform.scale(proportional_background, (WIDTH, HEIGHT)), (0, 0))
                 pygame.display.update()
                 break
+
             pygame.display.update()
+
     clock.tick(FPS)
     current_time = pygame.time.get_ticks()
 
@@ -220,7 +222,26 @@ while running:
         
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                player.shop_opened = not player.shop_opened
+                if player.menu_opened:
+         
+                    buttons.remove(inventory_button)
+                    buttons.remove(shop_button
+                                   )
+                else:
+                    inventory_button = Button('Inventory', WIDTH//2, 125, 450, 50, print)
+                    buttons.append(inventory_button)
+
+                    shop_button = Button('Shop', WIDTH//2, 425, 450, 50, print)
+                    buttons.append(shop_button)
+
+                player.menu_opened = not player.menu_opened
+                
+                
+        
+        for button in buttons:
+            if event.type == pygame.MOUSEBUTTONUP:
+                if button.rect.collidepoint(pygame.mouse.get_pos()):
+                    button.click_handler()
         
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
@@ -281,12 +302,15 @@ while running:
     screen.blit(proportional_background, (0, 0))
     sprites.update()
 
-    if player.shop_opened:
-        player.open_shop(screen)
+    if player.menu_opened:
+        player.open_menu(screen)
     else:
-        player.close_shop()
+        player.close_menu()
 
     sprites.draw(screen)
+
+    for button in buttons:
+        button.draw(screen)
     
 
     pygame.display.flip()
