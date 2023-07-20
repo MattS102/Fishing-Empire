@@ -268,7 +268,7 @@ while running:
                     if player.has_fish:
 
                         drawtext("Caught a fish!!",40, dblue ,600,250)
-                        drawtext(f"{Fish(meter.precentage)}", 25, dblue, 600,350)
+                        drawtext(f"{Fish(meter.percentage)}", 25, dblue, 600,350)
                         pygame.display.flip()
                         player.fish_inventory.append(Fish(meter.percentage))
                         print(player.fish_inventory[-1])
@@ -316,7 +316,7 @@ while running:
         cnt = 0   
         screen.blit(pygame.transform.scale(inventorybk,(WIDTH,HEIGHT)),(0,0))
         for i in player.fish_inventory:
-            screen.blit(pygame.transform.scale(fishimgarr[i.species],(500,500)),(randint(1, WIDTH), randint(1,HEIGHT)))
+            screen.blit(pygame.transform.scale(fishimgarr[i.species],(650,650)),(randint(200, 1000), randint(340,500)))
         for i in player.rod_inventory:
             screen.blit(pygame.transform.scale(rodarr[i],(100,100)),(50+175*cnt,100))
             pygame.display.update()
