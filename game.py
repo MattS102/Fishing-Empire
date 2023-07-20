@@ -4,7 +4,7 @@ from random import randrange
 from classes import Player, Fish, Meter, Button
 import os
 import time
-import random
+from random import randint
 
 WIDTH, HEIGHT = 1280, 720
 FPS = 60
@@ -33,7 +33,7 @@ salmon =  pygame.image.load('src/img/salmon.png')
 trout =  pygame.image.load('src/img/trout.png')
 tuna =  pygame.image.load('src/img/tuna.png')
 wincon =  pygame.image.load('src/img/Wincon.png')
-
+fishimgarr = [cod, bass, salmon, trout, tuna, wincon]
 aa = pygame.image.load('src/img/aquatic_abuductor.png')
 ch =  pygame.image.load('src/img/captain_hooker.png')
 ss =  pygame.image.load('src/img/salmon_slayer.png')
@@ -45,6 +45,7 @@ player =  pygame.image.load('src/img/player.png')
 longBut =  pygame.image.load('src/img/longbutton.png')
 smallBut =  pygame.image.load('src/img/smallbutton.png')
 
+inventorybk = pygame.image.load('src/img/InventoryBackround.png')
 pygame.init()
 logo = pygame.image.load('src/img/logo.png')
 pygame.display.set_icon(logo)
@@ -198,12 +199,12 @@ while running:
                         stmenu = False
 
 
-            # if current_time%20 == 0:
-                #if background_index == 1:
-                    #background_index = 0
-                #elif background_index == 0:
-                    #background_index = 1
-                #screen.blit(pygame.transform.scale(BACKGROUNDS[background_index], (WIDTH, HEIGHT)), (0, 0))
+            if current_time%20 == 0:
+                if background_index == 1:
+                    background_index = 0
+                elif background_index == 0:
+                    background_index = 1
+                screen.blit(pygame.transform.scale(BACKGROUNDS[background_index], (WIDTH, HEIGHT)), (0, 0))
             # stores the (x,y) coordinates into 
             # the variable as a tuple 
             mouse = pygame.mouse.get_pos() 
@@ -239,36 +240,19 @@ while running:
             running = False
 
             pygame.quit()
-
-        if event.type == pygame.MOUSEBUTTONUP:
-            # Print where the mouse is clicked (for testing purposes)
-            pos = pygame.mouse.get_pos()
-            print(pos)
-        
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
                 if player.menu_opened:
          
                     buttons.remove(inventory_button)
-                    buttons.remove(shop_button
-                                   )
+                    buttons.remove(shop_button)
                 else:
                     inventory_button = Button('Inventory', WIDTH//2, 125, 450, 50, print)
                     buttons.append(inventory_button)
 
                     shop_button = Button('Shop', WIDTH//2, 425, 450, 50, print)
                     buttons.append(shop_button)
-
-                player.menu_opened = not player.menu_opened
-                
-                
-        
-        for button in buttons:
-            if event.type == pygame.MOUSEBUTTONUP:
-                if button.rect.collidepoint(pygame.mouse.get_pos()):
-                    button.click_handler()
-        
-        if event.type == pygame.KEYDOWN:
+            player.menu_opened = not player.menu_opened
             if event.key == pygame.K_SPACE:
                 if player.bobber.is_cast:
                     if player.has_fish:
@@ -307,12 +291,23 @@ while running:
             
                     else:
                         sprites.add(meter, meter.bar)
+        if event.type == pygame.MOUSEBUTTONUP:
+            pos = pygame.mouse.get_pos()
+            # Print where the mouse is clicked (for testing purposes)
+            if 416 <= pos[0] <= 861 and 98 <= pos[1] <= 130:
+                invetory_open = True
+                screen.blit(pygame.transform.scale(inventorybk,(WIDTH,HEIGHT)),(0,0))
+                for i in player.fish_inventory:
+                    screen.blit(fishimgarr[i.species],(randint(1, WIDTH), randint(1,HEIGHT)))
+                    pygame.display.update()
+            print(pos)
 
-                        #meter.update()
-
-        # if event.type == next_background_event:
-            # screen.blit(pygame.transform.scale(BACKGROUNDS[background_index%2], (WIDTH, HEIGHT)), (0, 0))
-            # background_index += 1
+                
+        
+        for button in buttons:
+            if event.type == pygame.MOUSEBUTTONUP:
+                if button.rect.collidepoint(pygame.mouse.get_pos()):
+                    button.click_handler()
         
     if rng_chance(50) and player.bobber.is_cast and not player.has_fish:
         player.has_fish = True
