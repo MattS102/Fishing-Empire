@@ -313,6 +313,8 @@ while running:
                     
                         else: 
                             print("- No fish caught -")
+                            drawtext("No fish caught",128, dblue ,610,215)
+
                     
                         sprites.remove(meter, meter.bar)
                         meter.reset()
@@ -350,6 +352,9 @@ while running:
 
                         if player.buy_item(frame.item): 
                             frame.item.is_bought = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        shop_opened = False
 
         elif inventory_opened:
             if event.type == pygame.MOUSEBUTTONUP:
