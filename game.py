@@ -47,7 +47,7 @@ smallBut =  pygame.image.load('src/img/smallbutton.png')
 
 inventorybk = pygame.image.load('src/img/InventoryBackround.png')
 pygame.init()
-logo = pygame.image.load('src/img/logo.png')
+logo = pygame.image.load('src/img/Logo.png')
 pygame.display.set_icon(logo)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fish Game")
