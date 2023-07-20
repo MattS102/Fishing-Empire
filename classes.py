@@ -100,7 +100,7 @@ class Player(pygame.sprite.Sprite):
         self.menu_opened = True
     
     def close_menu(self):
-        self.shoped_opened = False
+        self.menu_opened = False
     
     def cast_rod(self, screen, position):
         self.bobber.move_to(*position)
