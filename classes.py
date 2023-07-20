@@ -1,7 +1,8 @@
 import pygame
 import random
 from numpy.random import choice as weighted_choice
-from numpy import pi 
+from numpy import pi
+
 
 
 class Fish(pygame.sprite.Sprite):
@@ -49,9 +50,11 @@ class Fish(pygame.sprite.Sprite):
         self.rarity = list(Fish.RARITY_DICT.keys())[
             rarity_choice
         ]  # Set rarity attribute based on rarity choice above
+
+        self.name = f"{self.rarity} {self.species}"
     
     def __repr__(self):
-        return f"{self.rarity} {self.species}"
+        return self.name
 
 
 class Player(pygame.sprite.Sprite):
@@ -67,6 +70,14 @@ class Player(pygame.sprite.Sprite):
         pygame.image.load("images/menu/menu.png"), SHOP_SIZE
     )
 
+    SHOP_PRICES = {"Captain Hooker" : 50, 
+                   "Salmon Slayer" : 150, 
+                   "Trout Terminator" : 400, 
+                   "Aquatic Abductor" : 1000, 
+                   "Slow-Time" : 50, 
+                   "1 in a Million" : 80, 
+                   "Double Down" : 100}
+
 
     def __init__(self, screen, position_x, position_y) -> None:
         pygame.sprite.Sprite.__init__(self)
@@ -78,6 +89,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = 0
         self.rect = pygame.Rect(*self.position, *Player.PLAYER_SIZE)
         self.image = Player.PLAYER_IMAGE.copy()
+        self.coins = 0
 
         self.menu_opened = False
 
@@ -122,6 +134,17 @@ class Player(pygame.sprite.Sprite):
         
         else:
             print(f"Transaction Failed: You need {abs(len(sell_queue) - quantity)} more {rarity} {species}")
+    
+    def buy_item(self, item):
+
+        if self.coins - item.price >= 0:
+            self.coins -= item.price 
+            self.rod_inventory += item
+            return True
+        
+        else:
+            print("Transaction Failed: Insufficient Funds")
+            return False
                 
             
 
@@ -243,7 +266,7 @@ class Button(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x-width//2, y-height//2, width, height)
         self.image = pygame.transform.scale(pygame.image.load(f"images/menu/{button_type}_button.png"), (width, height))
         self.text = text
-        self.clicked_function = clicked_function
+        self.clicked = False
     
 
     def draw(self, screen):
@@ -254,6 +277,51 @@ class Button(pygame.sprite.Sprite):
         screen.blit(self.image, self.position)
         screen.blit(text, rect)
 
-    def click_handler(self):
-        self.clicked_function('hello')
 
+class ItemFrame(pygame.sprite.Sprite):
+    
+    def __init__(self, item,  x, y, quantity=1):
+        self.rect = pygame.Rect(x, y, 170, 200)
+        self.position = (x//2, y//2)
+        self.image = pygame.Surface((170, 200))
+        self.item = item
+        self.quantity = quantity
+        self.buy_button = pygame.Rect(x, y + 155, 170, 45)
+        self.is_bought = False
+        
+    def __repr__(self):
+        return f"Item Frame holding x{self.quantity} {self.item}"
+
+    def draw(self, screen):
+
+        image_rect = self.image.get_rect()
+
+        pygame.draw.rect(self.image, pygame.Color(255, 255, 255), image_rect, 1)
+        pygame.draw.line(self.image, pygame.Color(255, 255, 255), (image_rect.x, image_rect.y + 155), (image_rect.x + image_rect.width, image_rect.y + 155))
+        self.image.blit(self.item.image, (image_rect.x//2 - self.item.rect.width, image_rect.y//2 - self.item.rect.height))
+
+        font = pygame.font.Font('fonts/8-Bit-Madness.ttf', 16)
+
+        if not self.is_bought:
+            text1 = font.render(f"Buy {self.item.name.replace('_', ' ').title()}", True, pygame.Color(255, 255, 255))
+            text1_rect = text1.get_rect()
+            self.image.blit(text1, (image_rect.x+image_rect.width//2-text1_rect.width//2, image_rect.y+image_rect.height-text1_rect.height//2-25))
+        
+            text2 =  font.render(f"for ${self.item.price}", True, pygame.Color(255, 255, 255))
+            text2_rect = text2.get_rect()
+            self.image.blit(text2, (image_rect.x+image_rect.width//2-text2_rect.width//2, image_rect.y+image_rect.height-text2_rect.height//2-15))
+
+        else:
+            text1 = font.render(f"[ Owne d]", True, pygame.Color(255, 255, 255))
+            text1_rect = text1.get_rect()
+            self.image.blit(text1, (image_rect.x+image_rect.width//2-text1_rect.width//2, image_rect.y+image_rect.height-text1_rect.height//2-25))
+        
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+class Item(pygame.sprite.Sprite):
+    
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+        self.image = pygame.image.load(f'images/player/{name}.png')
+        self.rect = pygame.Rect(0, 0, 64, 64)
