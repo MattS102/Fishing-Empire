@@ -27,7 +27,6 @@ BOARDWALK_HEIGHT = HEIGHT * 0.50
 dblue = (0,0,139)
 
 cod = pygame.image.load('src/img/cod.png')
-
 mb = pygame.image.load('src/img/_MB_.png')
 bass = pygame.image.load('src/img/bass.png')
 salmon =  pygame.image.load('src/img/salmon.png')
@@ -47,6 +46,8 @@ longBut =  pygame.image.load('src/img/longbutton.png')
 smallBut =  pygame.image.load('src/img/smallbutton.png')
 
 pygame.init()
+logo = pygame.image.load('src/img/logo.png')
+pygame.display.set_icon(logo)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fish Game")
 clock = pygame.time.Clock() 
@@ -138,10 +139,14 @@ def rng_chance(percent_chance):
 
     return randrange(0, 10000) < percent_chance
 
-#main TODO
+#main
+screen.fill((0,0,0))
+screen.blit(pygame.transform.scale(logo, (WIDTH/3, WIDTH/3)), (WIDTH/2-(WIDTH/3/2), HEIGHT/2-(HEIGHT/3)))
+pygame.display.flip()
+pygame.time.delay(3000)
+screen.blit(pygame.transform.scale(BACKGROUNDS[background_index], (WIDTH, HEIGHT)), (0, 0))
 welcome_message()
 pygame.display.flip()
-#TODO start menu
 running = True
 stmenu = True
 while running:
