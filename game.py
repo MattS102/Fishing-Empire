@@ -1,10 +1,9 @@
 import pygame
 import numpy
-from random import randrange
+from random import randrange, randint
 from classes import Player, Fish, Meter, Button, Item, ItemFrame
 import os
 import time
-import random
 
 WIDTH, HEIGHT = 1280, 720
 FPS = 60
@@ -44,6 +43,25 @@ ch =  pygame.image.load('src/img/captain_hooker.png')
 ss =  pygame.image.load('src/img/salmon_slayer.png')
 tt =  pygame.image.load('src/img/trout_terminator.png')
 
+Cod = pygame.image.load('src/img/cod.png')
+mb = pygame.image.load('src/img/_MB_.png')
+Bass = pygame.image.load('src/img/bass.png')
+Salmon =  pygame.image.load('src/img/salmon.png')
+Trout =  pygame.image.load('src/img/trout.png')
+Tuna =  pygame.image.load('src/img/tuna.png')
+Wincon =  pygame.image.load('src/img/Wincon.png')
+fishimgarr = {'Cod': Cod, 'Bass': Bass, 'Salmon': Salmon, 'Trout': Trout, 'Tuna': Tuna, 'Wincon': Wincon}
+aapl = pygame.image.load('src/img/aquatic_abuductor.png')
+chpl =  pygame.image.load('src/img/captain_hooker.png')
+sspl =  pygame.image.load('src/img/salmon_slayer.png')
+ttpl =  pygame.image.load('src/img/trout_terminator.png')
+aa = pygame.image.load('src/img/aquatic_abductor_item.png')
+ch =  pygame.image.load('src/img/captain_hooker_item.png')
+ss =  pygame.image.load('src/img/salmon_slayer_item.png')
+tt =  pygame.image.load('src/img/trout_terminator_item.png')
+rodarr = {"aa":aa,"ch":ch,"ss":ss,"tt":tt}
+chararodarr = {"aa":aapl,"ch":chpl,"ss":sspl,"tt":ttpl}
+
 
 #Scene and Menu Images
 dock =  pygame.image.load('src/img/dock.png')
@@ -71,6 +89,8 @@ proportional_background = pygame.transform.scale(proportional_background, (WIDTH
 BACKGROUNDS = [background1, background2]
 background_index = 0
 screen.blit(proportional_background, (0, 0))
+
+inventorybk = pygame.image.load('src/img/InventoryBackround.png')
 
 sprites = pygame.sprite.Group()
 # -  Add new sprites here -
@@ -314,15 +334,27 @@ while running:
                         else:
                             sprites.add(meter, meter.bar)
 
-                        #meter.update()
-        if shop_opened:
+            if event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                        # Print where the mouse is clicked (for testing purposes)
+                if 416 <= pos[0] <= 861 and 98 <= pos[1] <= 130:
+                    print("invopened")
+                    invetory_open = True
+                    print(pos)
+                
+        elif shop_opened:
             for frame in item_frames:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if frame.buy_button.collidepoint(pygame.mouse.get_pos()):
 
                         if player.buy_item(frame.item): 
                             frame.item.is_bought = True
-                        
+
+        elif inventory_opened:
+            if event.type == pygame.MOUSEBUTTONUP:
+                if 50 <= pos[0] <= len(player.rod_inventory)*150 and 100 <= pos[1] <= 200:
+                    player.current_rod = player.rod_inventory[(pos[0]//150)]
+                    print(player.current_rod)
                        
 
                         
@@ -360,12 +392,12 @@ while running:
     
     else:
         screen.blit(proportional_background, (0, 0))
-        
-        menu_panel_size = (1200, 600)
-        menu_panel = pygame.transform.scale(pygame.image.load('images/menu/menu_long.png'), menu_panel_size)
-        screen.blit(menu_panel, (screen.get_width()//2 - menu_panel_size[0]//2, screen.get_height()//2 - menu_panel_size[1]//2))
-
+        panel_size = (1200, 600)
+ 
         if shop_opened:
+            shop_menu_panel = pygame.transform.scale(pygame.image.load('images/menu/menu_long.png'), panel_size)
+            screen.blit(shop_menu_panel, (screen.get_width()//2 - panel_size[0]//2, screen.get_height()//2 - panel_size[1]//2))
+
             # for i, fish in enumerate(set(player.fish_inventory)):
                 # item_frames.append(ItemFrame(fish, i*180, 0, player.fish_inventory.count(fish)))
                 # print(item_frames)
@@ -375,6 +407,27 @@ while running:
             
             for frame in item_frames:
                 frame.draw(screen)
+        
+        elif inventory_opened:
+            cnt = 0   
+            panel_size = (1200, 800)
+
+            inventory_menu_panel = pygame.transform.scale(inventorybk, panel_size)
+            screen.blit(inventory_menu_panel, (screen.get_width()//2 - panel_size[0]//2, screen.get_height()//2 - panel_size[1]//2 + 50))
+
+            for i in player.fish_inventory:
+                screen.blit(pygame.transform.scale(fishimgarr[i.species],(500,500)),(randint(1, WIDTH),randint(1,HEIGHT)))
+
+            for i in player.rod_inventory:
+                screen.blit(pygame.transform.scale(rodarr[i],(100,100)),(95+140*cnt,100))
+            
+                cnt +=1
+            
+
+                # Print where the mouse is clicked (for testing purposes)
+                
+    
+    
 
                 
 

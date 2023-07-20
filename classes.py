@@ -53,6 +53,7 @@ class Fish(pygame.sprite.Sprite):
 
         self.name = f"{self.rarity} {self.species}"
 
+
     
     def __repr__(self):
         return self.name
@@ -60,7 +61,7 @@ class Fish(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     PLAYER_SIZE = (128, 128)
-    ROD = "fs"
+
     PLAYER_IMAGE = pygame.transform.scale(
         pygame.image.load("images/entities/player.png"), PLAYER_SIZE
     )
@@ -97,6 +98,7 @@ class Player(pygame.sprite.Sprite):
         self.bobber = self.Bobber(self)
 
         self.has_fish = False
+        self.current_rod = "fs"
 
 
     def update(self):
