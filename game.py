@@ -149,7 +149,6 @@ while running:
         while True:
             clock.tick(FPS)
             current_time = pygame.time.get_ticks()
-            welcome_message()
             for ev in pygame.event.get(): 
                 
                 if ev.type == pygame.QUIT: 
@@ -175,7 +174,8 @@ while running:
             # stores the (x,y) coordinates into 
             # the variable as a tuple 
             mouse = pygame.mouse.get_pos() 
-            
+            welcome_message()
+
             # if mouse is hovered on a button it 
             # changes to lighter shade 
             if WIDTH/2 <= mouse[0] <= WIDTH/2+200 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
@@ -204,6 +204,7 @@ while running:
                 pygame.display.update()
                 break
             pygame.display.update()
+            
     clock.tick(FPS)
     current_time = pygame.time.get_ticks()
 
