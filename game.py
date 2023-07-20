@@ -71,6 +71,8 @@ player = Player(screen, 125, BOARDWALK_HEIGHT)
 meter = Meter(METER_CENTER[0], HEIGHT - Meter.METER_SIZE[1] - 15)
 meter_active = False
 
+shop_opened = False
+
 sprites.add(player)
 sprites.add(meter, meter.bar)
 
@@ -140,6 +142,7 @@ def rng_chance(percent_chance):
     # so it should be kinda low
 
     return randrange(0, 10000) < percent_chance
+
 
 #main
 screen.fill((0,0,0))
