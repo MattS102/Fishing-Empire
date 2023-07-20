@@ -306,7 +306,6 @@ while running:
             if event.type == pygame.MOUSEBUTTONUP:
                 if button.rect.collidepoint(pygame.mouse.get_pos()):
                     button.click_handler()
-        
     if invetory_open:   
         screen.blit(pygame.transform.scale(inventorybk,(WIDTH,HEIGHT)),(0,0))
         for i in player.fish_inventory:
@@ -316,8 +315,9 @@ while running:
             for ev in pygame.event.get(): 
                 if ev.type == pygame.QUIT: 
                     pygame.quit()
-                if event.type == pygame.KEYDOWN:
+                if ev.type == pygame.KEYDOWN:
                     if ev.key == pygame.K_ESCAPE:
+                        print("gge")
                         invetory_open = False
                         break
 
