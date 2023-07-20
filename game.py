@@ -77,6 +77,7 @@ sprites.add(meter, meter.bar)
 color_light = (170,170,170) 
 # dark shade of the button 
 color_dark = (100,100,100) 
+lgreen = (144, 238, 144)
 
 
 # - - - - - - - - - - - - -
@@ -161,7 +162,32 @@ while running:
                     # button the game is terminated 
                     if WIDTH/2 <= mouse[0] <= WIDTH/2+140 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
                         pygame.quit() 
-                    if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                    if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40:
+                        #flashes when clicked
+                        drawtext("start",35, color_dark ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, color_dark ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, color_dark ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, color_dark ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
                         stmenu = False
 
 
@@ -179,22 +205,17 @@ while running:
             # if mouse is hovered on a button it 
             # changes to lighter shade 
             if WIDTH/2 <= mouse[0] <= WIDTH/2+200 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
-                pygame.draw.rect(screen,color_light,[WIDTH/2+30,HEIGHT/2,140,40]) 
+                drawtext("quit",35, lgreen ,WIDTH/2+100,HEIGHT/2+20) 
                 
             else: 
-                pygame.draw.rect(screen,color_dark,[WIDTH/2+30,HEIGHT/2,140,40]) 
+                drawtext("quit",35, color_light ,WIDTH/2+100,HEIGHT/2+20) 
                 
             if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
-                pygame.draw.rect(screen,color_light,[WIDTH/2-200,HEIGHT/2,200,40]) 
+                drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20) 
                 
             else: 
-                pygame.draw.rect(screen,color_dark,[WIDTH/2-200,HEIGHT/2,200,40]) 
+                drawtext("start",35, color_light ,WIDTH/2-100,HEIGHT/2+20) 
             
-            # superimposing the text onto our button 
-            drawtext("start",35, dblue ,WIDTH/2-100,HEIGHT/2+20)
-            
-            # superimposing the text onto our button 
-            drawtext("quit",35, dblue ,WIDTH/2+100,HEIGHT/2+20)
             #update background every 2 sec
 
 
@@ -228,8 +249,8 @@ while running:
                 if player.bobber.is_cast:
                     if player.has_fish:
 
-                        print("- Caught a fish -")
-                        print(f"Rarity = {meter.percentage} ")
+                        drawtext("Caught a fish!!",128, dblue ,610,215)
+                        drawtext(f"Rarity = {meter.percentage}", 64, dblue ,610,250)
 
                         player.fish_inventory.append(Fish(meter.percentage))
                         print(player.fish_inventory[-1])
