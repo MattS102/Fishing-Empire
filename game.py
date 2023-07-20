@@ -37,11 +37,7 @@ tuna =  pygame.image.load('src/img/tuna.png')
 wincon =  pygame.image.load('src/img/Wincon.png')
 
 
-# Rod Images
-aa = pygame.image.load('src/img/aquatic_abuductor.png')
-ch =  pygame.image.load('src/img/captain_hooker.png')
-ss =  pygame.image.load('src/img/salmon_slayer.png')
-tt =  pygame.image.load('src/img/trout_terminator.png')
+# Rod Images        
 
 Cod = pygame.image.load('src/img/cod.png')
 mb = pygame.image.load('src/img/_MB_.png')
@@ -51,10 +47,10 @@ Trout =  pygame.image.load('src/img/trout.png')
 Tuna =  pygame.image.load('src/img/tuna.png')
 Wincon =  pygame.image.load('src/img/Wincon.png')
 fishimgarr = {'Cod': Cod, 'Bass': Bass, 'Salmon': Salmon, 'Trout': Trout, 'Tuna': Tuna, 'Wincon': Wincon}
-aapl = pygame.image.load('src/img/aquatic_abuductor.png')
-chpl =  pygame.image.load('src/img/captain_hooker.png')
-sspl =  pygame.image.load('src/img/salmon_slayer.png')
-ttpl =  pygame.image.load('src/img/trout_terminator.png')
+aapl = pygame.transform.scale(pygame.image.load('src/img/aquatic_abuductor.png'),(128,128))
+chpl =  pygame.transform.scale(pygame.image.load('src/img/captain_hooker.png'),(128,128))
+sspl =  pygame.transform.scale(pygame.image.load('src/img/salmon_slayer.png'),(128,128))
+ttpl =  pygame.transform.scale(pygame.image.load('src/img/trout_terminator.png'),(128,128))
 aa = pygame.image.load('src/img/aquatic_abductor_item.png')
 ch =  pygame.image.load('src/img/captain_hooker_item.png')
 ss =  pygame.image.load('src/img/salmon_slayer_item.png')
@@ -359,8 +355,8 @@ while running:
         elif inventory_opened:
             if event.type == pygame.MOUSEBUTTONUP:
                 if 50 <= pos[0] <= len(player.rod_inventory)*150 and 100 <= pos[1] <= 200:
-                    player.current_rod = player.rod_inventory[(pos[0]//150)]
-                    player.image = chararodarr[player.current_rod]
+                    player.current_rod = player.rod_inventory[((pos[0]-95)//150)]
+                    player.image = pygame.transform.scale(chararodarr[player.current_rod],(128,128))
                 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
