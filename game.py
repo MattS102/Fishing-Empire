@@ -26,14 +26,14 @@ SEA_LEVEL = HEIGHT * 0.75
 BOARDWALK_HEIGHT = HEIGHT * 0.50
 dblue = (0,0,139)
 
-cod = pygame.image.load('src/img/cod.png')
+Cod = pygame.image.load('src/img/cod.png')
 mb = pygame.image.load('src/img/_MB_.png')
-bass = pygame.image.load('src/img/bass.png')
-salmon =  pygame.image.load('src/img/salmon.png')
-trout =  pygame.image.load('src/img/trout.png')
-tuna =  pygame.image.load('src/img/tuna.png')
-wincon =  pygame.image.load('src/img/Wincon.png')
-fishimgarr = [cod, bass, salmon, trout, tuna, wincon]
+Bass = pygame.image.load('src/img/bass.png')
+Salmon =  pygame.image.load('src/img/salmon.png')
+Trout =  pygame.image.load('src/img/trout.png')
+Tuna =  pygame.image.load('src/img/tuna.png')
+Wincon =  pygame.image.load('src/img/Wincon.png')
+fishimgarr = {'Cod': Cod, 'Bass': Bass, 'Salmon': Salmon, 'Trout': Trout, 'Tuna': Tuna, 'Wincon': Wincon}
 aa = pygame.image.load('src/img/aquatic_abuductor.png')
 ch =  pygame.image.load('src/img/captain_hooker.png')
 ss =  pygame.image.load('src/img/salmon_slayer.png')
@@ -155,6 +155,7 @@ welcome_message()
 pygame.display.flip()
 running = True
 stmenu = True
+invetory_open = False
 while running:
     #start menu
     if stmenu:
@@ -245,34 +246,34 @@ while running:
             pygame.quit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_e:
-                if player.menu_opened:
-         
+                player.menu_opened = not player.menu_opened
+                if not player.menu_opened:
                     buttons.remove(inventory_button)
                     buttons.remove(shop_button)
                 else:
+                    player.menu_opened = True
                     inventory_button = Button('Inventory', WIDTH//2, 125, 450, 50, print)
                     buttons.append(inventory_button)
-
                     shop_button = Button('Shop', WIDTH//2, 425, 450, 50, print)
                     buttons.append(shop_button)
-            player.menu_opened = not player.menu_opened
+
             if event.key == pygame.K_SPACE:
                 if player.bobber.is_cast:
                     if player.has_fish:
 
-                        drawtext("Caught a fish!!",128, dblue ,610,215)
-                        drawtext(f"Rarity = {meter.percentage}", 64, dblue ,610,250)
-
+                        drawtext("Caught a fish!!",40, dblue ,600,250)
+                        drawtext(f"Rarity = {meter.percentage}", 25, dblue, 600,350)
+                        pygame.display.flip()
                         player.fish_inventory.append(Fish(meter.percentage))
                         print(player.fish_inventory[-1])
+                        pygame.time.delay(2000)
 
 
                         player.has_fish = False
-
-
-                
                     else: 
-                        print("- No fish caught -")
+                        drawtext("- No fish caught -",25, dblue ,600,250)
+                        pygame.display.flip()
+                        pygame.time.delay(1000)
                 
                     sprites.remove(meter, meter.bar)
                     meter.reset()
@@ -298,20 +299,28 @@ while running:
             pos = pygame.mouse.get_pos()
             # Print where the mouse is clicked (for testing purposes)
             if 416 <= pos[0] <= 861 and 98 <= pos[1] <= 130:
+                print("invopened")
                 invetory_open = True
-                screen.blit(pygame.transform.scale(inventorybk,(WIDTH,HEIGHT)),(0,0))
-                for i in player.fish_inventory:
-                    screen.blit(fishimgarr[i.species],(randint(1, WIDTH), randint(1,HEIGHT)))
-                    pygame.display.update()
             print(pos)
-
-                
-        
         for button in buttons:
             if event.type == pygame.MOUSEBUTTONUP:
                 if button.rect.collidepoint(pygame.mouse.get_pos()):
                     button.click_handler()
         
+    if invetory_open:   
+        screen.blit(pygame.transform.scale(inventorybk,(WIDTH,HEIGHT)),(0,0))
+        for i in player.fish_inventory:
+            screen.blit(pygame.transform.scale(fishimgarr[i.species],(500,500)),(randint(1, WIDTH), randint(1,HEIGHT)))
+        while invetory_open:
+            pygame.display.update()
+            for ev in pygame.event.get(): 
+                if ev.type == pygame.QUIT: 
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    if ev.key == pygame.K_ESCAPE:
+                        invetory_open = False
+                        break
+
     if rng_chance(50) and player.bobber.is_cast and not player.has_fish:
         player.has_fish = True
         sprites.add(meter, meter.bar)
