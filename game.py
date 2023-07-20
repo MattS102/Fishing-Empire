@@ -55,8 +55,12 @@ aa = pygame.image.load('src/img/aquatic_abductor_item.png')
 ch =  pygame.image.load('src/img/captain_hooker_item.png')
 ss =  pygame.image.load('src/img/salmon_slayer_item.png')
 tt =  pygame.image.load('src/img/trout_terminator_item.png')
+coinup = pygame.transform.scale(pygame.image.load('src/img/coin-up.png'),(128,128))
+luckup =  pygame.transform.scale(pygame.image.load('src/img/PowerUp-Clover.png'),(128,128))
+slowtime =  pygame.transform.scale(pygame.image.load('src/img/slow-time.png'),(128,128))
 rodarr = {"aa":aa,"ch":ch,"ss":ss,"tt":tt}
 chararodarr = {"aa":aapl,"ch":chpl,"ss":sspl,"tt":ttpl}
+pwruparr = {"coinup" : coinup, "luckup" : luckup, "slowtime" : slowtime}
 
 
 #Scene and Menu Images
@@ -260,7 +264,19 @@ while running:
             # Print where the mouse is clicked (for testing purposes)
             pos = pygame.mouse.get_pos()
             print(pos)
-        
+            if inventory_opened:
+                try:
+                    if 900 < pos[0] < 950 and 125 < pos[1] < 225:
+                        player.powerupstat.append(player.powerup_inventory[0])
+                        player.powerup_inventory.pop(0)
+                    if 1050 < pos[0] < 1200 and 125 < pos[1] < 175:
+                        player.powerupstat.append(player.powerup_inventory[1])
+                        player.powerup_inventory.pop(1)
+                    if 950 < pos[0] < 1080 and 200 < pos[1] < 275:
+                        player.powerupstat.append(player.powerup_inventory[2])        
+                        player.powerup_inventory.pop(2)
+                except IndexError:
+                    drawtext("used!", 100, dblue, WIDTH/2,HEIGHT/2)
         
         if True not in (shop_opened, inventory_opened):
             if event.type == pygame.KEYDOWN:
@@ -428,9 +444,17 @@ while running:
                 screen.blit(pygame.transform.scale(rodarr[i],(100,100)),(95+140*cnt,100))
             
                 cnt +=1
-            
-
                 # Print where the mouse is clicked (for testing purposes)
+            if len(player.powerup_inventory) == 1:
+                screen.blit(pwruparr[player.powerup_inventory[0]], (850,75))
+            if len(player.powerup_inventory) == 2:
+                screen.blit(pwruparr[player.powerup_inventory[0]], (850,75))
+                screen.blit(pwruparr[player.powerup_inventory[1]], (1050,75))
+            if len(player.powerup_inventory) == 3:
+                screen.blit(pwruparr[player.powerup_inventory[0]], (850,75))
+                screen.blit(pwruparr[player.powerup_inventory[1]], (1050,75))
+                screen.blit(pwruparr[player.powerup_inventory[2]], (950,175))
+
                 
     
     
@@ -444,6 +468,5 @@ while running:
 
 
     
-
     pygame.display.flip()
 

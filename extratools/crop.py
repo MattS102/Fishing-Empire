@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 
-for root, subdirs, files in os.walk("~ Your Image Path ~):
+for root, subdirs, files in os.walk("src/img/"):
     print(root, subdirs, files)
     for file in files:
         if file.endswith('.png'):

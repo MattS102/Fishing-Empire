@@ -85,7 +85,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
         self.fish_inventory = []
-        self.powerup_inventory = []
+        self.powerup_inventory = ["slowtime", "coinup" , "luckup"]
         self.rod_inventory = ["aa", "ch"]
         self.position = (position_x, position_y)
         self.direction = 0
@@ -96,7 +96,7 @@ class Player(pygame.sprite.Sprite):
         self.menu_opened = False
 
         self.bobber = self.Bobber(self)
-
+        self.powerupstat = []
         self.has_fish = False
         self.current_rod = "fs"
 
