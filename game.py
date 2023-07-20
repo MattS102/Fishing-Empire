@@ -34,10 +34,16 @@ Trout =  pygame.image.load('src/img/trout.png')
 Tuna =  pygame.image.load('src/img/tuna.png')
 Wincon =  pygame.image.load('src/img/Wincon.png')
 fishimgarr = {'Cod': Cod, 'Bass': Bass, 'Salmon': Salmon, 'Trout': Trout, 'Tuna': Tuna, 'Wincon': Wincon}
-aa = pygame.image.load('src/img/aquatic_abuductor.png')
-ch =  pygame.image.load('src/img/captain_hooker.png')
-ss =  pygame.image.load('src/img/salmon_slayer.png')
-tt =  pygame.image.load('src/img/trout_terminator.png')
+aapl = pygame.image.load('src/img/aquatic_abuductor.png')
+chpl =  pygame.image.load('src/img/captain_hooker.png')
+sspl =  pygame.image.load('src/img/salmon_slayer.png')
+ttpl =  pygame.image.load('src/img/trout_terminator.png')
+aa = pygame.image.load('src/img/aquatic_abductor_item.png')
+ch =  pygame.image.load('src/img/captain_hooker_item.png')
+ss =  pygame.image.load('src/img/salmon_slayer_item.png')
+tt =  pygame.image.load('src/img/trout_terminator_item.png')
+rodarr = {"aa":aa,"ch":ch,"ss":ss,"tt":tt}
+chararodarr = {"aa":aapl,"ch":chpl,"ss":sspl,"tt":ttpl}
 
 dock =  pygame.image.load('src/img/dock.png')
 menu =  pygame.image.load('src/img/menu.png')
@@ -306,10 +312,15 @@ while running:
             if event.type == pygame.MOUSEBUTTONUP:
                 if button.rect.collidepoint(pygame.mouse.get_pos()):
                     button.click_handler()
-    if invetory_open:   
+    if invetory_open:
+        cnt = 0   
         screen.blit(pygame.transform.scale(inventorybk,(WIDTH,HEIGHT)),(0,0))
         for i in player.fish_inventory:
             screen.blit(pygame.transform.scale(fishimgarr[i.species],(500,500)),(randint(1, WIDTH), randint(1,HEIGHT)))
+        for i in player.rod_inventory:
+            screen.blit(pygame.transform.scale(rodarr[i],(100,100)),(50+175*cnt,100))
+            pygame.display.update()
+            cnt +=1
         while invetory_open:
             pygame.display.update()
             for ev in pygame.event.get(): 
@@ -317,9 +328,17 @@ while running:
                     pygame.quit()
                 if ev.type == pygame.KEYDOWN:
                     if ev.key == pygame.K_ESCAPE:
-                        print("gge")
+                        print("esc inv")
                         invetory_open = False
                         break
+                if ev.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    print(pos)
+                    # Print where the mouse is clicked (for testing purposes)
+                    if 50 <= pos[0] <= len(player.rod_inventory)*150 and 100 <= pos[1] <= 200:
+                        player.ROD = player.rod_inventory[(pos[0]//150)]
+                        print(player.ROD)
+                    
 
     if rng_chance(50) and player.bobber.is_cast and not player.has_fish:
         player.has_fish = True

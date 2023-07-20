@@ -56,7 +56,7 @@ class Fish(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     PLAYER_SIZE = (128, 128)
-
+    ROD = "fs"
     PLAYER_IMAGE = pygame.transform.scale(
         pygame.image.load("images/entities/player.png"), PLAYER_SIZE
     )
@@ -73,7 +73,7 @@ class Player(pygame.sprite.Sprite):
         self.screen = screen
         self.fish_inventory = []
         self.powerup_inventory = []
-        self.rod_inventory = []
+        self.rod_inventory = ["aa", "ch"]
         self.position = (position_x, position_y)
         self.direction = 0
         self.rect = pygame.Rect(*self.position, *Player.PLAYER_SIZE)
