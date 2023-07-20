@@ -27,7 +27,6 @@ BOARDWALK_HEIGHT = HEIGHT * 0.50
 dblue = (0,0,139)
 
 cod = pygame.image.load('src/img/cod.png')
-
 mb = pygame.image.load('src/img/_MB_.png')
 bass = pygame.image.load('src/img/bass.png')
 salmon =  pygame.image.load('src/img/salmon.png')
@@ -47,6 +46,8 @@ longBut =  pygame.image.load('src/img/longbutton.png')
 smallBut =  pygame.image.load('src/img/smallbutton.png')
 
 pygame.init()
+logo = pygame.image.load('src/img/logo.png')
+pygame.display.set_icon(logo)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fish Game")
 clock = pygame.time.Clock() 
@@ -79,6 +80,7 @@ buttons = []
 color_light = (170,170,170) 
 # dark shade of the button 
 color_dark = (100,100,100) 
+lgreen = (144, 238, 144)
 
 
 # - - - - - - - - - - - - -
@@ -139,10 +141,14 @@ def rng_chance(percent_chance):
 
     return randrange(0, 10000) < percent_chance
 
-#main TODO
+#main
+screen.fill((0,0,0))
+screen.blit(pygame.transform.scale(logo, (WIDTH/3, WIDTH/3)), (WIDTH/2-(WIDTH/3/2), HEIGHT/2-(HEIGHT/3)))
+pygame.display.flip()
+pygame.time.delay(3000)
+screen.blit(pygame.transform.scale(BACKGROUNDS[background_index], (WIDTH, HEIGHT)), (0, 0))
 welcome_message()
 pygame.display.flip()
-#TODO start menu
 running = True
 stmenu = True
 while running:
@@ -151,7 +157,6 @@ while running:
         while True:
             clock.tick(FPS)
             current_time = pygame.time.get_ticks()
-            welcome_message()
             for ev in pygame.event.get(): 
                 
                 if ev.type == pygame.QUIT: 
@@ -164,7 +169,32 @@ while running:
                     # button the game is terminated 
                     if WIDTH/2 <= mouse[0] <= WIDTH/2+140 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
                         pygame.quit() 
-                    if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
+                    if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40:
+                        #flashes when clicked
+                        drawtext("start",35, color_dark ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, color_dark ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, color_dark ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, color_dark ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
+                        drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20)
+                        pygame.display.update()
+                        pygame.time.delay(100)
                         stmenu = False
 
 
@@ -177,26 +207,22 @@ while running:
             # stores the (x,y) coordinates into 
             # the variable as a tuple 
             mouse = pygame.mouse.get_pos() 
-            
+            welcome_message()
+
             # if mouse is hovered on a button it 
             # changes to lighter shade 
             if WIDTH/2 <= mouse[0] <= WIDTH/2+200 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
-                pygame.draw.rect(screen,color_light,[WIDTH/2+30,HEIGHT/2,140,40]) 
+                drawtext("quit",35, lgreen ,WIDTH/2+100,HEIGHT/2+20) 
                 
             else: 
-                pygame.draw.rect(screen,color_dark,[WIDTH/2+30,HEIGHT/2,140,40]) 
+                drawtext("quit",35, color_light ,WIDTH/2+100,HEIGHT/2+20) 
                 
             if WIDTH/2-200 <= mouse[0] <= WIDTH/2 and HEIGHT/2 <= mouse[1] <= HEIGHT/2+40: 
-                pygame.draw.rect(screen,color_light,[WIDTH/2-200,HEIGHT/2,200,40]) 
+                drawtext("start",35, lgreen ,WIDTH/2-100,HEIGHT/2+20) 
                 
             else: 
-                pygame.draw.rect(screen,color_dark,[WIDTH/2-200,HEIGHT/2,200,40]) 
+                drawtext("start",35, color_light ,WIDTH/2-100,HEIGHT/2+20) 
             
-            # superimposing the text onto our button 
-            drawtext("start",35, dblue ,WIDTH/2-100,HEIGHT/2+20)
-            
-            # superimposing the text onto our button 
-            drawtext("quit",35, dblue ,WIDTH/2+100,HEIGHT/2+20)
             #update background every 2 sec
 
             if not stmenu:
@@ -205,7 +231,6 @@ while running:
                 break
 
             pygame.display.update()
-
     clock.tick(FPS)
     current_time = pygame.time.get_ticks()
 
@@ -248,8 +273,8 @@ while running:
                 if player.bobber.is_cast:
                     if player.has_fish:
 
-                        print("- Caught a fish -")
-                        print(f"Rarity = {meter.percentage} ")
+                        drawtext("Caught a fish!!",128, dblue ,610,215)
+                        drawtext(f"Rarity = {meter.percentage}", 64, dblue ,610,250)
 
                         player.fish_inventory.append(Fish(meter.percentage))
                         print(player.fish_inventory[-1])
