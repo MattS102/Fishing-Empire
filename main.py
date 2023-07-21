@@ -25,7 +25,7 @@ dblue = (0,0,139)
 print('Loading...')
 
 pygame.init()
-logo = pygame.image.load('src/img/logo.png')
+logo = pygame.image.load('src/img/Logo.png')
 pygame.display.set_icon(logo)
 
 # Fish Images 
@@ -109,8 +109,8 @@ sprites.add(meter, meter.bar)
 
 buttons = []
 item_frames = []
-rods = {"Captain Hooker" : 50, "Salmon Slayer" : 150, "Trout Terminator" : 400, "Aquatic Abductor" : 1000}
-power_ups = {"Slow-Time" : 50, "1 in a Million" : 80, "Double Down" : 100}
+rods = {"Captain Hooker" : 500, "Salmon Slayer" : 1500, "Trout Terminator" : 4000, "Aquatic Abductor" : 10000}
+power_ups = {"Slow-Time" : 500, "1 in a Million" : 800, "Double Down" : 1000}
 
 
 # light shade of the button 
