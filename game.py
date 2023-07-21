@@ -61,7 +61,10 @@ luckup =  pygame.transform.scale(pygame.image.load('src/img/PowerUp-Clover.png')
 slowtime =  pygame.transform.scale(pygame.image.load('src/img/slow-time.png'),(128,128))
 rodarr = {"aa":aa,"ch":ch,"ss":ss,"tt":tt}
 chararodarr = {"aa":aapl,"ch":chpl,"ss":sspl,"tt":ttpl}
+rods_convert = {"ch" : "Captain Hooker", "ss": "Salmon Slayer", "tt": "Trout Terminator", "aa": "Aquatic Abductor"}
 pwruparr = {"coinup" : coinup, "luckup" : luckup, "slowtime" : slowtime}
+power_up_convert = {"coinup" : "Double Coins", "luckup" : "Lucky Catch", "slowtime" : "Slower Meter"}
+
 
 
 #Scene and Menu Images
@@ -87,6 +90,7 @@ proportional_background = pygame.transform.scale(proportional_background, (WIDTH
 BACKGROUNDS = [background1, background2]
 background_index = 0
 screen.blit(proportional_background, (0, 0))
+long_menu_image = pygame.image.load('images/menu/menu_long.png')
 
 inventorybk = pygame.image.load('src/img/InventoryBackround.png')
 
@@ -94,6 +98,7 @@ sprites = pygame.sprite.Group()
 # -  Add new sprites here -
 player = Player(screen, 125, BOARDWALK_HEIGHT)
 meter = Meter(METER_CENTER[0], HEIGHT - Meter.METER_SIZE[1] - 15)
+
 meter_active = False
 
 shop_opened = False
@@ -107,6 +112,7 @@ item_frames = []
 rods = {"Captain Hooker" : 50, "Salmon Slayer" : 150, "Trout Terminator" : 400, "Aquatic Abductor" : 1000}
 power_ups = {"Slow-Time" : 50, "1 in a Million" : 80, "Double Down" : 100}
 
+
 # light shade of the button 
 color_light = (170,170,170) 
 # dark shade of the button 
@@ -119,6 +125,11 @@ text_list = []
 
 for i, (rod, price) in enumerate(rods.items()):
     new_frame = ItemFrame(Item(rod.lower().replace(" ", "_"), price), i*200 + 255, 100)
+    item_frames.append(new_frame)
+
+for i, (power_up, price) in enumerate(power_ups.items()):
+    new_frame = ItemFrame(Item(power_up, price), i*200 + 355, 350)
+    new_frame.is_bought = True
     item_frames.append(new_frame)
 
 
@@ -146,11 +157,19 @@ def draw_all_text():
 
             text, size, color, x, y, font_path = params
 
+
             font = pygame.font.Font(font_path ,size)
-            txt = font.render(text, True, color)
+
+            if isinstance(text, str):
+                txt = font.render(text, True, color)
+            else:
+                txt = text
+
             rec = txt.get_rect()
             rec.center = (x,y)
             screen.blit(txt, rec)
+
+            
 
             if stmenu:
                 _text_list.append(text_and_params)
@@ -160,7 +179,12 @@ def draw_all_text():
             text, size, color, x, y, font_path = params
 
             font = pygame.font.Font(font_path ,size)
-            txt = font.render(text, True, color)
+
+            if isinstance(text, str):
+                txt = font.render(text, True, color)
+            else:
+                txt = text
+        
             rec = txt.get_rect()
             rec.center = (x,y)
             screen.blit(txt, rec)
@@ -262,6 +286,7 @@ while running:
     clock.tick(FPS)
     current_time = pygame.time.get_ticks()
 
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -271,22 +296,28 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:
             # Print where the mouse is clicked (for testing purposes)
             pos = pygame.mouse.get_pos()
-            print(pos)
+            #print(pos)
             if inventory_opened:
                 try:
                     if 900 < pos[0] < 950 and 125 < pos[1] < 225:
-                        player.powerupstat.append(player.powerup_inventory[0])
-                        player.powerup_inventory.pop(0)
+                        player.use_powerup(0)
                     if 1050 < pos[0] < 1200 and 125 < pos[1] < 175:
-                        player.powerupstat.append(player.powerup_inventory[1])
-                        player.powerup_inventory.pop(1)
+                        player.use_powerup(1)
                     if 950 < pos[0] < 1080 and 200 < pos[1] < 275:
-                        player.powerupstat.append(player.powerup_inventory[2])        
-                        player.powerup_inventory.pop(2)
+                        player.use_powerup(2)
                 except IndexError:
                     drawtext("used!", 100, dblue, WIDTH/2,HEIGHT/2)
+
+
+        if "slowtime" in player.powerupstat:
+            meter.bar.speed = 10
+        
+        else:
+            meter.bar.speed = 25
+
         
         if True not in (shop_opened, inventory_opened):
+
             if event.type == pygame.KEYDOWN:
                 if event.key in (pygame.K_e, pygame.K_ESCAPE):
                     if player.menu_opened:
@@ -324,11 +355,16 @@ while running:
                             text_list = []
                             drawtext("- Caught a fish!! -",32, dblue ,610,215, duration=3000)
 
-                            new_fish = Fish(meter.percentage)
+                            new_fish = Fish(100 if "luckup" in player.powerupstat else meter.percentage)
                             drawtext(repr(new_fish), 16, dblue ,610,250,duration=3000)
 
                             player.fish_inventory.append(new_fish)
-                            print(player.fish_inventory[-1])
+                            #print(player.fish_inventory[-1])
+
+                            payout = Fish.RARITY_DICT[new_fish.rarity] * Fish.SPECIES_DICT[new_fish.species] * (2 if "coinup" in player.powerupstat else 1)
+                            drawtext(f"+{payout}", 16, pygame.Color(0, 0, 0), 40 , 40,duration=3000)
+
+                            player.coins += payout
 
 
                             player.has_fish = False
@@ -337,7 +373,7 @@ while running:
                     
                         else: 
                             text_list = []
-                            print("- No fish caught -")
+                            #print("- No fish caught -")
                             drawtext("- No fish caught -",32, dblue ,610,215, duration=3000)
                         
 
@@ -350,6 +386,7 @@ while running:
                         
                     
                     else:
+                        text_list = []
                         
                         if not meter.stopped:
                             
@@ -367,17 +404,22 @@ while running:
                 pos = pygame.mouse.get_pos()
                         # Print where the mouse is clicked (for testing purposes)
                 if 416 <= pos[0] <= 861 and 98 <= pos[1] <= 130:
-                    print("invopened")
+                    #print("invopened")
                     invetory_open = True
-                    print(pos)
+                    #print(pos)
                 
         elif shop_opened:
             for frame in item_frames:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if frame.buy_button.collidepoint(pygame.mouse.get_pos()):
+                        #print(frame.item.name)
+                        if not frame.is_bought:
 
-                        if player.buy_item(frame.item): 
-                            frame.is_bought = True
+                            if player.buy_item(frame.item): 
+                                frame.is_bought = True
+                            #font = pygame.font.Font('fonts/8-Bit-Madness.ttf' , 32)
+                            #txt = font.render(f"[Bought {frame.item.name.replace('_', ' ').title()}]", True, pygame.Color(0, 0, 0))
+
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -393,6 +435,7 @@ while running:
                 if event.key == pygame.K_ESCAPE:
                     inventory_opened = False
             
+        draw_all_text()
 
                         
                         
@@ -407,13 +450,13 @@ while running:
         sprites.add(meter, meter.bar)
         text_list = []
         drawtext("- Fish on the line -",32, dblue ,610,215, duration=3000)
-        print("- Fish on the line -")
+        #print("- Fish on the line -")
     
     if rng_chance(60) and player.has_fish:
         player.has_fish = False
         text_list = []
         drawtext("- Fish was lost -",32, dblue ,610,215, duration=3000)
-        print("- Fish was lost -")
+        #print("- Fish was lost -")
     
     
     screen.blit(proportional_background, (0, 0))
@@ -434,7 +477,32 @@ while running:
             button.draw(screen)
 
         if player.bobber.is_cast:
-            drawtext('[Rod Casted]', 16, pygame.Color(0, 0, 0), WIDTH-100, 10)
+            drawtext('[Rod Casted]', 16, pygame.Color(0, 0, 0), WIDTH-100, HEIGHT-20)
+        
+        static_draw_text("Powerups and Rods:", 18, pygame.Color(0, 0, 0), WIDTH-180, 20)
+        inventory = player.powerupstat + player.rod_inventory
+
+        if len(inventory) == 0:
+            font = pygame.font.Font('src/img/mariofont.ttf', 16)
+            txt = font.render("[Empty]", True, pygame.Color(0, 0, 0))
+            _rect = txt.get_rect()
+            rect = pygame.Rect(WIDTH-280, 35, _rect.width, _rect.height)
+            screen.blit(txt, rect)
+
+        for i, item in enumerate(inventory):
+            #static_draw_text(f"-{item}", 16, pygame.Color(0, 0, 0), WIDTH-100, 300 + 20*i)
+            if item in power_up_convert.keys():
+                item = power_up_convert[item]
+
+            elif item in rods_convert.keys():
+                item = rods_convert[item]
+            
+
+            font = pygame.font.Font('src/img/mariofont.ttf', 16)
+            txt = font.render(f"-{item}", True, pygame.Color(0, 0, 0))
+            _rect = txt.get_rect()
+            rect = pygame.Rect(WIDTH-280, 35 + 20*i, _rect.width, _rect.height)
+            screen.blit(txt, rect)
         
         draw_all_text()
     
@@ -444,16 +512,9 @@ while running:
  
         if shop_opened:
             text_list = []
-            shop_menu_panel = pygame.transform.scale(pygame.image.load('images/menu/menu_long.png'), panel_size)
+            shop_menu_panel = pygame.transform.scale(long_menu_image, panel_size)
             screen.blit(shop_menu_panel, (screen.get_width()//2 - panel_size[0]//2, screen.get_height()//2 - panel_size[1]//2))
 
-            # for i, fish in enumerate(set(player.fish_inventory)):
-                # item_frames.append(ItemFrame(fish, i*180, 0, player.fish_inventory.count(fish)))
-                # print(item_frames)
-
-            # for item_frame in item_frames:
-                # item_frame.draw(screen)
-            
             for frame in item_frames:
                 frame.draw(screen)
         
@@ -466,7 +527,7 @@ while running:
             screen.blit(inventory_menu_panel, (screen.get_width()//2 - panel_size[0]//2, screen.get_height()//2 - panel_size[1]//2 + 50))
 
             for i in player.fish_inventory:
-                screen.blit(pygame.transform.scale(fishimgarr[i.species],(500,500)),(randint(1, WIDTH),randint(1,HEIGHT)))
+                screen.blit(pygame.transform.scale(fishimgarr[i.species],(150,100)),(randint(60, WIDTH-130),randint(HEIGHT-HEIGHT//3, HEIGHT-130)))
 
             for i in player.rod_inventory:
                 screen.blit(pygame.transform.scale(rodarr[i],(100,100)),(95+140*cnt,100))
@@ -483,18 +544,14 @@ while running:
                 screen.blit(pwruparr[player.powerup_inventory[1]], (1050,75))
                 screen.blit(pwruparr[player.powerup_inventory[2]], (950,175))
 
-                
-    
-    
-
-                
-
-                
-        
-
+    if not inventory_opened:
+        font = pygame.font.Font('src/img/mariofont.ttf', 16)
+        txt = font.render(f"Coins: {player.coins}", True, pygame.Color(0, 0, 0))
+        _rect = txt.get_rect()
+        rect = pygame.Rect(10, 10, _rect.width, _rect.height)
+        screen.blit(txt, rect)
     
 
-
+                
     
     pygame.display.flip()
-

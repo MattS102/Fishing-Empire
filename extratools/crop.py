@@ -9,6 +9,3 @@ for root, subdirs, files in os.walk("src/img/"):
             with Image.open(path) as image:
                 new_image = image.crop(image.getbbox())
                 new_image.save(path)
-
-
-

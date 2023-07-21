@@ -20,7 +20,8 @@ class Fish(pygame.sprite.Sprite):
         30: [0.70, 0.25, 0.05, 0.0, 0.0, 0.0],
         50: [0.50, 0.20, 0.15, 0.10, 0.05, 0.0],
         70: [0.30, 0.25, 0.25, 0.10, 0.05, 0.05],
-        90: [0.15, 0.15, 0.30, 0.15, 0.15, 0.10]
+        90: [0.15, 0.15, 0.30, 0.15, 0.15, 0.10],
+        100: [0.05, 0.05, 0.05, 0.45, 0.25, 0.15]
     }
 
     SPECIES_DICT = {
@@ -39,6 +40,8 @@ class Fish(pygame.sprite.Sprite):
         self.species = random.choice(list(Fish.SPECIES_DICT.keys()))
         self.image = pygame.image.load(f'images/entities/fish/{self.species.lower()}.png')
         self.rect =  pygame.Rect(0, 0,  *self.image.get_size())
+
+        self.active_powerups = []
 
         rarity_multiplier_key = min(Fish.RARITY_MULTIPLIER_DICT.keys(), key=lambda x:abs(x-rarity_multiplier))
         
@@ -85,13 +88,13 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
         self.fish_inventory = []
-        self.powerup_inventory = ["slowtime", "coinup" , "luckup"]
-        self.rod_inventory = ["aa", "ch"]
+        self.powerup_inventory = ["coinup", "luckup", "slowtime"]
+        self.rod_inventory = []
         self.position = (position_x, position_y)
         self.direction = 0
         self.rect = pygame.Rect(*self.position, *Player.PLAYER_SIZE)
         self.image = Player.PLAYER_IMAGE.copy()
-        self.coins = 1000
+        self.coins = 0
 
         self.menu_opened = False
 
@@ -119,7 +122,7 @@ class Player(pygame.sprite.Sprite):
     def cast_rod(self, screen, position):
         self.bobber.move_to(*position)
 
-    def sell_fish(self, species, rarity, quantity):
+    def sell_fish(self, species, rarity, quantity=1):
         sell_queue = []
         new_fish_inventory = []
 
@@ -132,16 +135,16 @@ class Player(pygame.sprite.Sprite):
         if len(sell_queue) == quantity:
             self.fish_inventory = new_fish_inventory
 
-            print("Transaction Completed")
+            self.coins += Fish.RARITY_DICT[rarity] * Fish.SPECIES_DICT[species] * (2 if "coinup" in self.powerupstat else 1)
         
         else:
             print(f"Transaction Failed: You need {abs(len(sell_queue) - quantity)} more {rarity} {species}")
     
     def buy_item(self, item):
-
         if self.coins - item.price >= 0:
             self.coins -= item.price 
-            self.rod_inventory.append(item)
+            print(''.join(word[0] for word in item.name.split("_")))
+            self.rod_inventory.append(''.join(word[0] for word in item.name.split("_")))
 
             print(self.coins)
 
@@ -150,6 +153,14 @@ class Player(pygame.sprite.Sprite):
         else:
             print("Transaction Failed: Insufficient Funds")
             return False
+        
+    
+    def use_powerup(self, index):
+        new_power = self.powerup_inventory.pop(index)
+        print(new_power)
+        self.powerupstat.append(new_power)
+
+
                 
             
 
@@ -229,14 +240,15 @@ class Meter(pygame.sprite.Sprite):
             self.percentage = 0 
             self.current = 0
             self.stopped = False
+            self.speed = 25
 
         def move(self):
-            speed = 25
+            
             start = self.parent.rect.x + self.parent.rect.width * (6 / 82)
             end = self.parent.rect.x + self.parent.rect.width - self.parent.rect.width * (6 / 82)
             self.percentage = (self.rect.x + 2 - start) / (end - start) * 100
 
-            step = speed * (1 if self.is_increasing else -1)
+            step = self.speed * (1 if self.is_increasing else -1)
 
             
             if start - self.rect.x > step and not self.is_increasing:
@@ -246,7 +258,7 @@ class Meter(pygame.sprite.Sprite):
                 self.is_increasing = False
 
 
-            step = speed * (1 if self.is_increasing else -1)
+            step = self.speed * (1 if self.is_increasing else -1)
 
 
             self.position = (self.position[0] + step, self.position[1])
@@ -270,7 +282,7 @@ class Button(pygame.sprite.Sprite):
     def __init__(self, text, x, y, width, height, clicked_function, button_type='long', font_size=32) -> None:
 
         pygame.sprite.Sprite.__init__(self)
-        
+
         self.font_size = font_size
         self.position = (x-width/2, y-height//2)
         self.rect = pygame.Rect(x-width//2, y-height//2, width, height)
@@ -289,11 +301,13 @@ class Button(pygame.sprite.Sprite):
 
 
 class ItemFrame(pygame.sprite.Sprite):
+
+    FRAME_IMAGE = pygame.transform.scale(pygame.image.load('images/menu/frame.png'), (170, 200))
     
     def __init__(self, item,  x, y, quantity=1):
         self.rect = pygame.Rect(x, y, 170, 200)
         self.position = (x//2, y//2)
-        self.image = pygame.Surface((170, 200))
+        self.image = ItemFrame.FRAME_IMAGE.copy()
         self.item = item
         self.quantity = quantity
         self.buy_button = pygame.Rect(x, y + 155, 170, 45)
@@ -304,35 +318,61 @@ class ItemFrame(pygame.sprite.Sprite):
 
     def draw(self, screen):
 
+        self.image = ItemFrame.FRAME_IMAGE.copy()
+
         image_rect = self.image.get_rect()
         item_rect = self.item.image.get_rect()
 
-        pygame.draw.rect(self.image, pygame.Color(255, 255, 255), image_rect, 1)
-        pygame.draw.line(self.image, pygame.Color(255, 255, 255), (image_rect.x, image_rect.y + 155), (image_rect.x + image_rect.width, image_rect.y + 155))
-        self.image.blit(pygame.transform.scale(self.item.image, Player.PLAYER_SIZE), (image_rect.x + image_rect.width//2 - item_rect.width - 30, image_rect.y + image_rect.height//2 - item_rect.height - 50))
+
+        #pygame.draw.rect(self.image, pygame.Color(0, 0, 0), image_rect, 1)
+        #pygame.draw.line(self.image, pygame.Color(0, 0, 0), (image_rect.x, image_rect.y + 155), (image_rect.x + image_rect.width, image_rect.y + 155))
+        
+        if self.item.name == "1 in a Million":
+            offset_x = 3
+            offset_y = 5
+    
+        elif self.item.name == "Slow-Time":
+            offset_x = 25
+            offset_y = 22
+        
+        elif self.item.name == "Double Down":
+            offset_x = 18
+            offset_y = 23
+        
+        else: 
+            offset_x = 0
+            offset_y = 0
+
+        self.image.blit(pygame.transform.scale(self.item.image, Player.PLAYER_SIZE), (image_rect.x + image_rect.width//2 - item_rect.width - 35 + offset_x, image_rect.y + image_rect.height//2 - item_rect.height - 60 + offset_y))
 
         font = pygame.font.Font('fonts/8-Bit-Madness.ttf', 16)
 
         if not self.is_bought:
-            text1 = font.render(f"Buy {self.item.name.replace('_', ' ').title()}", True, pygame.Color(255, 255, 255))
+            text1 = font.render(f"Click To Buy", True, pygame.Color(0, 0, 0))
             text1_rect = text1.get_rect()
-            self.image.blit(text1, (image_rect.x+image_rect.width//2-text1_rect.width//2, image_rect.y+image_rect.height-text1_rect.height//2-25))
-        
-            text2 =  font.render(f"for ${self.item.price}", True, pygame.Color(255, 255, 255))
+            self.image.blit(text1, (image_rect.x+image_rect.width//2-text1_rect.width//2, image_rect.y+image_rect.height-text1_rect.height//2-45))
+
+            text3 =  font.render(f"{self.item.name.replace('_', ' ').title()}", True, pygame.Color(0, 0, 0))
+            text3_rect = text3.get_rect()
+            self.image.blit(text3, (image_rect.x+image_rect.width//2-text3_rect.width//2, image_rect.y+image_rect.height-text3_rect.height//2-30))
+
+            text2 =  font.render(f"for ${self.item.price}", True, pygame.Color(0, 0, 0))
             text2_rect = text2.get_rect()
             self.image.blit(text2, (image_rect.x+image_rect.width//2-text2_rect.width//2, image_rect.y+image_rect.height-text2_rect.height//2-15))
 
         else:
-            text1 = font.render(f"[ Owned ]", True, pygame.Color(255, 255, 255))
+            text1 = font.render(f"[ Owned ]", True, pygame.Color(0, 0, 0))
             text1_rect = text1.get_rect()
-            self.image.blit(text1, (image_rect.x+image_rect.width//2-text1_rect.width//2, image_rect.y+image_rect.height-text1_rect.height//2-25))
+            self.image.blit(text1, (image_rect.x+image_rect.width//2-text1_rect.width//2, image_rect.y+image_rect.height-text1_rect.height//2-30))
         
         
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
 class Item(pygame.sprite.Sprite):
+
+    POWER_UP_CONVERT = {"1 in a Million": "PowerUp-Clover", "Slow Time": "slow-time", "Double Down": "coin-up"}
     
     def __init__(self, name, price):
         self.name = name
         self.price = price
-        self.image = pygame.image.load(f'images/player/{name}.png')
+        self.image = pygame.image.load(f'images/player/{Item.POWER_UP_CONVERT[name] if name in Item.POWER_UP_CONVERT.keys() else name}.png')
