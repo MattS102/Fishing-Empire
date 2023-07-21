@@ -74,7 +74,7 @@ player =  pygame.image.load('src/img/player.png')
 longBut =  pygame.image.load('src/img/longbutton.png')
 smallBut =  pygame.image.load('src/img/smallbutton.png')
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN )
 pygame.display.set_caption("Fish Game")
 clock = pygame.time.Clock() 
 
@@ -106,6 +106,8 @@ inventory_opened = False
 
 sprites.add(player)
 sprites.add(meter, meter.bar)
+
+position_list = []
 
 buttons = []
 item_frames = []
@@ -526,8 +528,12 @@ while running:
             inventory_menu_panel = pygame.transform.scale(inventorybk, panel_size)
             screen.blit(inventory_menu_panel, (screen.get_width()//2 - panel_size[0]//2, screen.get_height()//2 - panel_size[1]//2 + 50))
 
-            for i in player.fish_inventory:
-                screen.blit(pygame.transform.scale(fishimgarr[i.species],(150,100)),(randint(60, WIDTH-130),randint(HEIGHT-HEIGHT//3, HEIGHT-130)))
+            if pygame.time.get_ticks() % 10 == 0 or position_list == [] or len(position_list) < len(player.fish_inventory):
+                position_list = [(randint(60, WIDTH-130),randint(HEIGHT-HEIGHT//3, HEIGHT-130)) for fish in player.fish_inventory]
+
+            for i, fish in enumerate(player.fish_inventory):
+                print(*position_list[i])
+                screen.blit(pygame.transform.scale(fishimgarr[fish.species],(150,100)), position_list[i])
 
             for i in player.rod_inventory:
                 screen.blit(pygame.transform.scale(rodarr[i],(100,100)),(95+140*cnt,100))
