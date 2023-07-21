@@ -35,7 +35,7 @@ bass = pygame.image.load('src/img/bass.png')
 salmon =  pygame.image.load('src/img/salmon.png')
 trout =  pygame.image.load('src/img/trout.png')
 tuna =  pygame.image.load('src/img/tuna.png')
-Wincon =  pygame.image.load('src/img/Wincon.png')
+Wincon =  pygame.image.load('src/img/wincon.png')
 
 
 # Rod Images        
@@ -46,7 +46,7 @@ Bass = pygame.image.load('src/img/bass.png')
 Salmon =  pygame.image.load('src/img/salmon.png')
 Trout =  pygame.image.load('src/img/trout.png')
 Tuna =  pygame.image.load('src/img/tuna.png')
-Wincon =  pygame.image.load('src/img/Wincon.png')
+Wincon =  pygame.image.load('src/img/wincon.png')
 fishimgarr = {'Cod': Cod, 'Bass': Bass, 'Salmon': Salmon, 'Trout': Trout, 'Tuna': Tuna, 'Wincon': Wincon}
 aapl = pygame.transform.scale(pygame.image.load('src/img/aquatic_abuductor.png'),Player.PLAYER_SIZE)
 chpl =  pygame.transform.scale(pygame.image.load('src/img/captain_hooker.png'),Player.PLAYER_SIZE)
