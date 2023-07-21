@@ -74,7 +74,7 @@ player =  pygame.image.load('src/img/player.png')
 longBut =  pygame.image.load('src/img/longbutton.png')
 smallBut =  pygame.image.load('src/img/smallbutton.png')
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 pygame.display.set_caption("Fish Game")
 clock = pygame.time.Clock() 
 
