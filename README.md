@@ -15,3 +15,6 @@ This game was created by Shea Patel, Tim Slater, Matt Schoenfeld, Ishwar Madhusu
 Tufts Coding Academy 2023
 
 Google Drive Link (remove when finished): https://drive.google.com/drive/u/1/folders/11fiZDjVa7gHt7Hx6cSNn6vNEUWinjkWl
+
+#Bugs
+the file crashes when you click or press key during loading, please be pacient :)
