@@ -3,7 +3,7 @@ from random import randrange, randint
 from classes import Player, Fish, Meter, Button, Item, ItemFrame
 
 WIDTH, HEIGHT = 1280, 720
-FPS = 60
+FPS = 40
 
 WHITE = (255, 255, 255)
 
@@ -526,7 +526,7 @@ while running:
             inventory_menu_panel = pygame.transform.scale(inventorybk, panel_size)
             screen.blit(inventory_menu_panel, (screen.get_width()//2 - panel_size[0]//2, screen.get_height()//2 - panel_size[1]//2 + 50))
 
-            for i in player.fish_inventory:
+            for i in player.fish_inventory:     
                 screen.blit(pygame.transform.scale(fishimgarr[i.species],(150,100)),(randint(60, WIDTH-130),randint(HEIGHT-HEIGHT//3, HEIGHT-130)))
 
             for i in player.rod_inventory:
